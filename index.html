@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOG Studio — Apple Log & 3D LUT Color Science для macOS</title>
+  <meta name="description" content="Профессиональная утилита для macOS. Точная колориметрия Apple Log (BT.2020 в Rec.709), экспорт 3D LUT (.cube) и работа с Hald CLUT.">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Minimal Pro Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <img src="assets/icon.png" alt="LOG Studio" class="brand-icon">
+        <span class="brand-title">LOG Studio</span>
+      </div>
+      <nav class="header-nav">
+        <a href="#color-science">Колориметрия</a>
+        <a href="#workflow">Рабочий процесс</a>
+        <a href="#specs">Спецификации</a>
+      </nav>
+      <div class="header-cta">
+        <a href="downloads/LOG_Studio.dmg" class="nav-download-link" download>
+          Скачать .dmg
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Cinematic Hero -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <p class="eyebrow">Для видеографов и колористов на Mac</p>
+        <h1 class="hero-heading">Кинематографичный цвет.<br>Математическая точность.</h1>
+        <p class="hero-lead">
+          LOG Studio трансформирует видеоматериал Apple Log с iPhone в выверенное цветовое пространство Rec.709 с кинематографическим тональным отображением и экспортом эталонных 3D LUT.
+        </p>
+
+        <div class="hero-download-block">
+          <a href="downloads/LOG_Studio.dmg" class="download-button" download>
+            <svg class="apple-icon" viewBox="0 0 170 170" fill="currentColor">
+              <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.08-7.7-7.97-12.04-14.67-6.08-9.39-10.87-20.08-14.36-32.08-3.48-12-5.22-23.36-5.22-34.08 0-16.14 4.08-29.67 12.23-40.59 8.16-10.92 18.59-16.48 31.3-16.69 4.35 0 9.4 1.16 15.15 3.49 5.75 2.32 9.68 3.54 11.79 3.65 1.74 0 5.8-1.28 12.18-3.83 6.37-2.55 11.85-3.63 16.43-3.25 12.63.85 22.86 5.57 30.68 14.16-11.09 6.74-16.53 16.03-16.32 27.87.21 9.48 3.86 17.51 10.95 24.1 7.09 6.59 15.54 10.23 25.35 10.93-2.61 7.62-5.98 15.34-10.11 23.16zM119.22 31.84c0-7.39 2.66-14.34 7.98-20.85 5.32-6.52 11.96-10.51 19.92-11.99.21 1.09.32 2.07.32 2.94 0 7.39-2.77 14.45-8.31 21.18-5.54 6.74-12.39 10.74-20.55 12.01-.22-1.09-.33-2.07-.33-2.94z"/>
+            </svg>
+            <span>Загрузить для macOS</span>
+          </a>
+          <span class="download-subtext">macOS 12+ • Apple Silicon & Intel • 125 МБ</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Professional Cinema Comparison Viewer -->
+    <section class="viewer-section">
+      <div class="viewer-wrapper">
+        <div class="monitor-frame">
+          <div class="monitor-header">
+            <span class="monitor-channel">Apple Log Profile • ITU-R BT.2020 → Rec.709</span>
+            <span class="monitor-code">00:04:18:12</span>
+          </div>
+
+          <div class="viewport" id="comparisonWrapper">
+            <!-- Graded View (Bottom Layer) -->
+            <div class="viewport-layer layer-graded">
+              <img src="assets/portrait_apple_log.png" alt="Graded Footage" class="footage-img footage-graded">
+              <div class="layer-overlay overlay-right">
+                <span class="profile-label">Rec.709 Filmic Tone Mapping</span>
+              </div>
+            </div>
+
+            <!-- Raw Apple Log (Top Layer) -->
+            <div class="viewport-layer layer-raw" id="logLayer">
+              <img src="assets/portrait_apple_log.png" alt="Apple Log Raw" class="footage-img">
+              <div class="layer-overlay overlay-left">
+                <span class="profile-label">Apple Log / BT.2020 Raw</span>
+              </div>
+            </div>
+
+            <!-- Precision Split Controller -->
+            <div class="split-controller" id="sliderHandle">
+              <div class="controller-line"></div>
+              <div class="controller-knob">
+                <span class="knob-arrow">‹</span>
+                <span class="knob-arrow">›</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="viewer-caption">Перетащите ползунок для сравнительного анализа цветового охвата и динамического диапазона</p>
+      </div>
+    </section>
+
+    <!-- Color Science Architecture -->
+    <section class="editorial-section" id="color-science">
+      <div class="section-container">
+        <div class="section-title-block">
+          <p class="section-tag">Колориметрия</p>
+          <h2 class="section-headline">Чистая математика цвета без компромиссов.</h2>
+        </div>
+
+        <div class="narrative-grid">
+          <div class="narrative-card">
+            <div class="card-num">01</div>
+            <h3>Официальный профиль Apple Log</h3>
+            <p>
+              Алгоритм построен на базе спецификаций Apple Log Profile White Paper. Значения пикселей декодируются в линейное световое пространство сцены, сохраняя полный динамический диапазон от глубоких теней до 18% серого (R = 0.1800) и ярких бликов.
+            </p>
+          </div>
+
+          <div class="narrative-card">
+            <div class="card-num">02</div>
+            <h3>Трансформация BT.2020 в Rec.709</h3>
+            <p>
+              Прямой матричный пересчет цветовых координат из расширенного охвата BT.2020 в стандартный Rec.709. Цвета сохраняют естественные телесные оттенки (skin tones) и чистую насыщенность без клиппинга.
+            </p>
+          </div>
+
+          <div class="narrative-card">
+            <div class="card-num">03</div>
+            <h3>Фильмический компрессионный тонемаппинг</h3>
+            <p>
+              Мягкий спад в светах предотвращает резкие цифровые пересветы, сохраняя текстуру неба и градиенты кожи, делая картинку с мобильного устройства неотличимой от профессиональной кинокамеры.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workflow Integration -->
+    <section class="editorial-section border-top" id="workflow">
+      <div class="section-container">
+        <div class="section-title-block">
+          <p class="section-tag">Рабочий процесс</p>
+          <h2 class="section-headline">Интеграция с вашей студией монтажа.</h2>
+        </div>
+
+        <div class="narrative-grid">
+          <div class="narrative-card">
+            <div class="card-num">04</div>
+            <h3>Экспорт 3D LUT (.cube)</h3>
+            <p>
+              Создание стандартных трехмерных кубов интерполяции (17³, 33³, 65³). Готовые файлы импортируются в DaVinci Resolve, Final Cut Pro, Premiere Pro, а также накамерные мониторы SmallHD и Atomos.
+            </p>
+          </div>
+
+          <div class="narrative-card">
+            <div class="card-num">05</div>
+            <h3>Поддержка нейтральных Hald CLUT</h3>
+            <p>
+              Используйте привычные инструменты Photoshop или Lightroom: примените цветокоррекцию к сгенерированному нейтральному шаблону Hald CLUT, и LOG Studio мгновенно превратит его в видео-LUT.
+            </p>
+          </div>
+
+          <div class="narrative-card">
+            <div class="card-num">06</div>
+            <h3>Пакетная обработка и плеер</h3>
+            <p>
+              Встроенный видеоплеер обеспечивает моментальный просмотр видеопотока с цветокоррекцией на лету, а batch-процессор конвертирует целые съемочные папки за один клик.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Specifications Table (Apple Style) -->
+    <section class="specs-section border-top" id="specs">
+      <div class="section-container">
+        <div class="section-title-block">
+          <p class="section-tag">Спецификации</p>
+          <h2 class="section-headline">Технические требования и совместимость.</h2>
+        </div>
+
+        <div class="specs-table">
+          <div class="specs-row">
+            <div class="specs-label">Операционная система</div>
+            <div class="specs-val">macOS Monterey 12.0 или новее (macOS 13 Ventura, 14 Sonoma, 15 Sequoia)</div>
+          </div>
+          <div class="specs-row">
+            <div class="specs-label">Архитектура процессора</div>
+            <div class="specs-val">Universal Binary: Apple Silicon (M1, M2, M3, M4, Pro, Max, Ultra) и процессоры Intel 64-bit</div>
+          </div>
+          <div class="specs-row">
+            <div class="specs-label">Входные форматы</div>
+            <div class="specs-val">Apple Log ProRes (422 HQ / Proxy / LT), MP4, MOV, кадры PNG, TIFF, JPG</div>
+          </div>
+          <div class="specs-row">
+            <div class="specs-label">Экспортные форматы</div>
+            <div class="specs-val">3D LUT (.cube от 17×17×17 до 65×65×65), Hald CLUT (PNG 8/16-bit, TIFF)</div>
+          </div>
+          <div class="specs-row">
+            <div class="specs-label">Конфиденциальность</div>
+            <div class="specs-val">100% автономная локальная работа на компьютере. Без телеметрии, подписок и передачи данных в сеть</div>
+          </div>
+          <div class="specs-row">
+            <div class="specs-label">Установка</div>
+            <div class="specs-val">Автономный образ <code>LOG_Studio.dmg</code> (125 МБ). При первом запуске: правый клик → «Открыть»</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final Call to Action -->
+    <section class="bottom-action-section">
+      <div class="section-container action-container">
+        <img src="assets/icon.png" alt="LOG Studio" class="action-app-icon">
+        <h2 class="action-title">LOG Studio для Mac</h2>
+        <p class="action-sub">Чистый, независимый и быстрый инструмент для работы с цветом.</p>
+        <a href="downloads/LOG_Studio.dmg" class="download-button" download>
+          <svg class="apple-icon" viewBox="0 0 170 170" fill="currentColor">
+            <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.08-7.7-7.97-12.04-14.67-6.08-9.39-10.87-20.08-14.36-32.08-3.48-12-5.22-23.36-5.22-34.08 0-16.14 4.08-29.67 12.23-40.59 8.16-10.92 18.59-16.48 31.3-16.69 4.35 0 9.4 1.16 15.15 3.49 5.75 2.32 9.68 3.54 11.79 3.65 1.74 0 5.8-1.28 12.18-3.83 6.37-2.55 11.85-3.63 16.43-3.25 12.63.85 22.86 5.57 30.68 14.16-11.09 6.74-16.53 16.03-16.32 27.87.21 9.48 3.86 17.51 10.95 24.1 7.09 6.59 15.54 10.23 25.35 10.93-2.61 7.62-5.98 15.34-10.11 23.16zM119.22 31.84c0-7.39 2.66-14.34 7.98-20.85 5.32-6.52 11.96-10.51 19.92-11.99.21 1.09.32 2.07.32 2.94 0 7.39-2.77 14.45-8.31 21.18-5.54 6.74-12.39 10.74-20.55 12.01-.22-1.09-.33-2.07-.33-2.94z"/>
+          </svg>
+          <span>Загрузить LOG_Studio.dmg</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Apple-Style Subdued Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-meta">
+        <p>© 2026 LOG Studio. Собрано для macOS.</p>
+        <p class="footer-legal">Apple, iPhone, macOS и Apple Log являются товарными знаками Apple Inc.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#color-science">Колориметрия</a>
+        <a href="#specs">Спецификации</a>
+        <a href="downloads/LOG_Studio.dmg" download>Прямая загрузка DMG</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

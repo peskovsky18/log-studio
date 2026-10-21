@@ -1,0 +1,570 @@
+/* ==========================================================================
+   LOG Studio — Apple Pro Editorial Aesthetic
+   Crafted with authentic Apple typography, whitespace & cinematic restraint.
+   ========================================================================== */
+
+:root {
+  --bg-deep: #000000;
+  --bg-surface: #0c0c0e;
+  --bg-surface-elevated: #16161a;
+  
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(255, 255, 255, 0.22);
+
+  --text-primary: #f5f5f7;
+  --text-secondary: #a1a1a6;
+  --text-tertiary: #6e6e73;
+
+  --btn-bg: #f5f5f7;
+  --btn-text: #000000;
+  --btn-hover: #ffffff;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-deep);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Navigation Bar (Apple Style Blur)
+   -------------------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+  height: 52px;
+}
+
+.header-container {
+  max-width: 1120px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+}
+
+.brand-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.header-nav a {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.2s ease;
+}
+
+.header-nav a:hover {
+  color: var(--text-primary);
+}
+
+.nav-download-link {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--btn-text);
+  background-color: var(--btn-bg);
+  padding: 6px 14px;
+  border-radius: 980px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.nav-download-link:hover {
+  background-color: var(--btn-hover);
+}
+
+/* --------------------------------------------------------------------------
+   Hero Section
+   -------------------------------------------------------------------------- */
+.hero-section {
+  padding: 100px 24px 60px;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 820px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.eyebrow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin-bottom: 20px;
+}
+
+.hero-heading {
+  font-size: clamp(2.8rem, 6.5vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.hero-lead {
+  font-size: clamp(1.15rem, 2.2vw, 1.35rem);
+  color: var(--text-secondary);
+  line-height: 1.45;
+  font-weight: 400;
+  max-width: 680px;
+  margin-bottom: 40px;
+}
+
+.hero-download-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.download-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  padding: 16px 32px;
+  border-radius: 980px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.download-button:hover {
+  background-color: var(--btn-hover);
+  transform: scale(1.02);
+}
+
+.download-button:active {
+  transform: scale(0.98);
+}
+
+.apple-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.download-subtext {
+  font-size: 0.82rem;
+  color: var(--text-tertiary);
+}
+
+/* --------------------------------------------------------------------------
+   Cinema Monitor Viewer (Split Screen)
+   -------------------------------------------------------------------------- */
+.viewer-section {
+  padding: 20px 24px 100px;
+}
+
+.viewer-wrapper {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.monitor-frame {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+}
+
+.monitor-header {
+  height: 38px;
+  background-color: #08080a;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+}
+
+.monitor-channel {
+  color: var(--text-secondary);
+}
+
+.viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  user-select: none;
+  cursor: ew-resize;
+  background-color: #000;
+}
+
+.viewport-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.footage-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.footage-graded {
+  filter: contrast(1.52) saturate(1.38) brightness(0.97);
+}
+
+.layer-raw {
+  width: 50%;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.layer-raw .footage-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.layer-overlay {
+  position: absolute;
+  bottom: 20px;
+  z-index: 4;
+}
+
+.overlay-left { left: 20px; }
+.overlay-right { right: 20px; }
+
+.profile-label {
+  display: inline-block;
+  padding: 5px 12px;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.split-controller {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1.5px;
+  background-color: #ffffff;
+  z-index: 5;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.controller-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: #000000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.knob-arrow {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.viewer-caption {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 0.82rem;
+  color: var(--text-tertiary);
+}
+
+/* --------------------------------------------------------------------------
+   Editorial & Storytelling Sections
+   -------------------------------------------------------------------------- */
+.editorial-section {
+  padding: 90px 24px;
+}
+
+.border-top {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.section-container {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.section-title-block {
+  max-width: 680px;
+  margin-bottom: 56px;
+}
+
+.section-tag {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+}
+
+.section-headline {
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  color: var(--text-primary);
+}
+
+.narrative-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+}
+
+.narrative-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-num {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+}
+
+.narrative-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.narrative-card p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Apple Style Tech Specs Table
+   -------------------------------------------------------------------------- */
+.specs-section {
+  padding: 90px 24px;
+}
+
+.specs-table {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.specs-row {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  align-items: baseline;
+  gap: 24px;
+}
+
+.specs-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.specs-val {
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.specs-val code {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  background-color: var(--bg-surface-elevated);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--text-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Bottom Action
+   -------------------------------------------------------------------------- */
+.bottom-action-section {
+  padding: 90px 24px;
+  border-top: 1px solid var(--border-subtle);
+  text-align: center;
+}
+
+.action-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.action-app-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 18px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.action-title {
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+
+.action-sub {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+.site-footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: 40px 24px;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+.footer-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.footer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-legal {
+  color: #48484a;
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-links a {
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: var(--text-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .narrative-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .specs-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 680px) {
+  .header-nav {
+    display: none;
+  }
+
+  .hero-section {
+    padding: 60px 20px 40px;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+  }
+}

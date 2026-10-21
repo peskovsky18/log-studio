@@ -1,0 +1,6 @@
+# macOS system files
+.DS_Store
+
+# Large binary installation files (uploaded to GitHub Releases instead of git commit)
+downloads/*.dmg
+*.dmg
