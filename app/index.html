@@ -75,6 +75,40 @@
       color: #ffffff;
     }
 
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* LANGUAGE SWITCHER */
+    .lang-switch {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--surface-elevated);
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
     .sys-status {
       font-family: var(--mono);
       font-size: 10px;
@@ -93,7 +127,7 @@
       box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
     }
 
-    /* MATRIX HERO VIEWPORT: Interactive Color Canvas */
+    /* MATRIX HERO VIEWPORT */
     .viewport-box {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -425,16 +459,23 @@
       <span class="brand-mark"></span>
       <span class="brand-name">LOG Studio</span>
     </div>
-    <div class="sys-status">
-      <span class="status-dot"></span>
-      <span>CUBE ENGINE 3D</span>
+    <div class="top-controls">
+      <!-- RU / EN SWITCHER -->
+      <div class="lang-switch">
+        <button class="lang-btn active" id="btnLangRu">RU</button>
+        <button class="lang-btn" id="btnLangEn">EN</button>
+      </div>
+      <div class="sys-status">
+        <span class="status-dot"></span>
+        <span>3D LUT</span>
+      </div>
     </div>
   </header>
 
   <!-- 2. THE SPECTRAL MATRIX HERO -->
   <section class="viewport-box">
     <div class="viewport-header">
-      <span class="viewport-tag">Спектральная матрица Hald 8</span>
+      <span class="viewport-tag" id="tMatrixTag">Спектральная матрица Hald 8</span>
       <span class="viewport-meta" id="matrixMeta">64³ • 262 144 NODES</span>
     </div>
     <div class="canvas-container">
@@ -449,7 +490,7 @@
 
   <!-- 3. INPUT SELECTION -->
   <section class="panel">
-    <span class="panel-label">1. Исходный пресет (Lightroom / VSCO / PS)</span>
+    <span class="panel-label" id="tSection1">1. Исходный пресет (Lightroom / VSCO / PS)</span>
     <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg,image/webp,image/tiff" style="display:none;">
     
     <div class="drop-box" id="dropBox">
@@ -459,29 +500,29 @@
 
     <button class="btn-outline" id="btnGetNeutral">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-      Скачать эталонный neutral_hald8.png
+      <span id="tBtnDownloadNeutral">Скачать эталонный neutral_hald8.png</span>
     </button>
   </section>
 
   <!-- 4. CALIBRATION & EXPORT -->
   <section class="panel">
-    <span class="panel-label">2. Калибровка вывода .CUBE</span>
+    <span class="panel-label" id="tSection2">2. Калибровка вывода .CUBE</span>
 
     <!-- Pipeline Mode -->
     <div class="segmented" id="segPipeline">
-      <button class="segment-btn active" data-val="creative_only">Rec.709 (Creative)</button>
-      <button class="segment-btn" data-val="apple_log">Apple Log &rarr; Rec.709</button>
+      <button class="segment-btn active" data-val="creative_only" id="tPipeCreative">Rec.709 (Creative)</button>
+      <button class="segment-btn" data-val="apple_log" id="tPipeLog">Apple Log &rarr; Rec.709</button>
     </div>
 
     <!-- LUT Resolution -->
     <div class="segmented" id="segSize">
-      <button class="segment-btn active" data-val="33">33×33×33 (CapCut / VN)</button>
-      <button class="segment-btn" data-val="64">64×64×64 (Master Studio)</button>
+      <button class="segment-btn active" data-val="33" id="tSize33">33×33×33 (CapCut / VN)</button>
+      <button class="segment-btn" data-val="64" id="tSize64">64×64×64 (Master Studio)</button>
     </div>
 
     <!-- Intensity Slider -->
     <div class="slider-row">
-      <span>Интенсивность цвета</span>
+      <span id="tLabelIntensity">Интенсивность цвета</span>
       <span class="val" id="valStrength">100%</span>
     </div>
     <input type="range" id="rangeStrength" min="0" max="100" value="100">
@@ -491,7 +532,7 @@
 
     <!-- Export Trigger -->
     <button class="btn-solid" id="btnBake" disabled>
-      Запечь и скачать .CUBE
+      <span id="tBtnBake">Запечь и скачать .CUBE</span>
     </button>
   </section>
 
@@ -508,6 +549,60 @@
   <canvas id="workCanvas" width="512" height="512" class="hidden"></canvas>
 
   <script>
+    // --- I18N DICTIONARY ---
+    const i18n = {
+      ru: {
+        matrixTag: "Спектральная матрица Hald 8",
+        hudDefault: "ЭТАЛОН: ИДЕНТИЧНЫЙ",
+        hudLoaded: "СТАТУС: ПРЕСЕТ ЗАГРУЖЕН",
+        section1: "1. Исходный пресет (Lightroom / VSCO / PS)",
+        dropTitle: "Загрузить обработанный Hald 8",
+        dropSub: "Нажмите для выбора из фото или файлов",
+        dropLoadedSub: "64³ спектр считан • Нажмите для замены",
+        btnDownloadNeutral: "Скачать эталонный neutral_hald8.png",
+        section2: "2. Калибровка вывода .CUBE",
+        pipeCreative: "Rec.709 (Creative)",
+        pipeLog: "Apple Log → Rec.709",
+        size33: "33×33×33 (CapCut / VN)",
+        size64: "64×64×64 (Master Studio)",
+        intensity: "Интенсивность цвета",
+        namePlaceholder: "Имя файла (напр. Cine_Warm)",
+        btnBake: "Запечь и скачать .CUBE",
+        btnBaking: "ГЕНЕРАЦИЯ .CUBE...",
+        toastNeutralSaved: "✓ neutral_hald8.png сохранен",
+        toastBadImage: "⚠ Требуется изображение (PNG/JPEG)",
+        toastMatrixParsed: "✓ Цветовая матрица зафиксирована",
+        toastExported: "✓ {title}.cube экспортирован",
+        toastError: "⚠ Ошибка генерации"
+      },
+      en: {
+        matrixTag: "Hald 8 Spectral Matrix",
+        hudDefault: "REFERENCE: NEUTRAL",
+        hudLoaded: "STATUS: PRESET CAPTURED",
+        section1: "1. Source Preset (Lightroom / VSCO / PS)",
+        dropTitle: "Upload Edited Hald 8",
+        dropSub: "Tap to select from photos or files",
+        dropLoadedSub: "64³ spectrum parsed • Tap to replace",
+        btnDownloadNeutral: "Download reference neutral_hald8.png",
+        section2: "2. Output Calibration (.CUBE)",
+        pipeCreative: "Rec.709 (Creative)",
+        pipeLog: "Apple Log → Rec.709",
+        size33: "33×33×33 (CapCut / VN)",
+        size64: "64×64×64 (Master Studio)",
+        intensity: "Color Intensity",
+        namePlaceholder: "File title (e.g. Cine_Warm)",
+        btnBake: "Bake & Download .CUBE",
+        btnBaking: "GENERATING .CUBE...",
+        toastNeutralSaved: "✓ neutral_hald8.png saved",
+        toastBadImage: "⚠ Image file required (PNG/JPEG)",
+        toastMatrixParsed: "✓ Color matrix locked in",
+        toastExported: "✓ {title}.cube exported",
+        toastError: "⚠ Generation error"
+      }
+    };
+
+    let currentLang = 'ru';
+
     // Telegram WebApp Setup
     const tg = window.Telegram?.WebApp;
     if (tg) {
@@ -515,6 +610,23 @@
       tg.expand();
       if (tg.setHeaderColor) tg.setHeaderColor('#09090b');
       if (tg.setBackgroundColor) tg.setBackgroundColor('#09090b');
+
+      // Auto-detect language from Telegram user profile
+      const userLang = tg.initDataUnsafe?.user?.language_code;
+      if (userLang && !userLang.toLowerCase().startsWith('ru')) {
+        currentLang = 'en';
+      }
+    } else {
+      // Fallback to browser language
+      if (navigator.language && !navigator.language.toLowerCase().startsWith('ru')) {
+        currentLang = 'en';
+      }
+    }
+
+    // Check saved preference
+    const savedLang = localStorage.getItem('log_studio_lang');
+    if (savedLang === 'ru' || savedLang === 'en') {
+      currentLang = savedLang;
     }
 
     function haptic(type) {
@@ -523,6 +635,48 @@
         else if (type === 'impact') tg.HapticFeedback.impactOccurred('medium');
       }
     }
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('log_studio_lang', lang);
+      const t = i18n[lang];
+
+      document.getElementById('tMatrixTag').textContent = t.matrixTag;
+      if (!activeLutPixels) {
+        document.getElementById('hudState').textContent = t.hudDefault;
+        document.getElementById('dropTitle').textContent = t.dropTitle;
+        document.getElementById('dropSub').textContent = t.dropSub;
+      } else {
+        document.getElementById('hudState').textContent = t.hudLoaded;
+        document.getElementById('dropSub').textContent = t.dropLoadedSub;
+      }
+
+      document.getElementById('tSection1').textContent = t.section1;
+      document.getElementById('tBtnDownloadNeutral').textContent = t.btnDownloadNeutral;
+      document.getElementById('tSection2').textContent = t.section2;
+      document.getElementById('tPipeCreative').textContent = t.pipeCreative;
+      document.getElementById('tPipeLog').textContent = t.pipeLog;
+      document.getElementById('tSize33').textContent = t.size33;
+      document.getElementById('tSize64').textContent = t.size64;
+      document.getElementById('tLabelIntensity').textContent = t.intensity;
+      document.getElementById('txtName').placeholder = t.namePlaceholder;
+      if (!btnBake.disabled) {
+        document.getElementById('tBtnBake').textContent = t.btnBake;
+      }
+
+      document.getElementById('btnLangRu').classList.toggle('active', lang === 'ru');
+      document.getElementById('btnLangEn').classList.toggle('active', lang === 'en');
+    }
+
+    document.getElementById('btnLangRu').addEventListener('click', () => {
+      haptic('impact');
+      applyLanguage('ru');
+    });
+
+    document.getElementById('btnLangEn').addEventListener('click', () => {
+      haptic('impact');
+      applyLanguage('en');
+    });
 
     // Canvas Matrix Rendering
     const mCanvas = document.getElementById('matrixCanvas');
@@ -569,7 +723,7 @@
       a.download = 'neutral_hald8.png';
       a.href = mCanvas.toDataURL('image/png');
       a.click();
-      showToast('✓ neutral_hald8.png сохранен');
+      showToast(i18n[currentLang].toastNeutralSaved);
     });
 
     // File Drop & Load
@@ -612,7 +766,7 @@
 
     function handleFile(file) {
       if (!file.type.startsWith('image/')) {
-        showToast('⚠ Требуется изображение (PNG/JPEG)');
+        showToast(i18n[currentLang].toastBadImage);
         return;
       }
 
@@ -628,10 +782,10 @@
           mCtx.drawImage(img, 0, 0, DIM, DIM);
 
           // Update HUD
-          hudState.textContent = 'СТАТУС: ПРЕСЕТ ЗАГРУЖЕН';
+          hudState.textContent = i18n[currentLang].hudLoaded;
           hudRes.textContent = `${file.name.slice(0, 16)}`;
           dropTitle.textContent = file.name;
-          dropSub.textContent = '64³ спектр считан • Нажмите для замены';
+          dropSub.textContent = i18n[currentLang].dropLoadedSub;
           dropBox.classList.add('loaded');
 
           const cleanStem = file.name.replace(/\.[^/.]+$/, "").replace("neutral_hald8", "Grade").replace("hald_", "");
@@ -639,7 +793,7 @@
 
           btnBake.disabled = false;
           haptic('success');
-          showToast('✓ Цветовая матрица зафиксирована');
+          showToast(i18n[currentLang].toastMatrixParsed);
         };
         img.src = e.target.result;
       };
@@ -768,7 +922,7 @@
       if (!activeLutPixels) return;
 
       btnBake.disabled = true;
-      btnBake.textContent = 'ГЕНЕРАЦИЯ .CUBE...';
+      document.getElementById('tBtnBake').textContent = i18n[currentLang].btnBaking;
       haptic('impact');
 
       setTimeout(() => {
@@ -828,13 +982,13 @@
           setTimeout(() => URL.revokeObjectURL(url), 2000);
 
           haptic('success');
-          showToast(`✓ ${title}.cube экспортирован`);
+          showToast(i18n[currentLang].toastExported.replace('{title}', title));
         } catch (err) {
           console.error(err);
-          showToast('⚠ Ошибка генерации');
+          showToast(i18n[currentLang].toastError);
         } finally {
           btnBake.disabled = false;
-          btnBake.textContent = 'ЗАПЕЧЬ И СКАЧАТЬ .CUBE';
+          document.getElementById('tBtnBake').textContent = i18n[currentLang].btnBake;
         }
       }, 40);
     });
@@ -845,6 +999,9 @@
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 3000);
     }
+
+    // Initialize Language
+    applyLanguage(currentLang);
   </script>
 </body>
 </html>
