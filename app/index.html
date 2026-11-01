@@ -365,6 +365,235 @@
       transform: none;
     }
 
+    /* TOP NAVIGATION TABS */
+    .nav-tabs {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 3px;
+      margin-bottom: 12px;
+      gap: 4px;
+    }
+
+    .nav-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--sans);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.1px;
+      padding: 7px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .nav-tab.active {
+      background: var(--surface-elevated);
+      color: #ffffff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    /* TAB PANES */
+    .tab-pane {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    /* PREVIEW TOOLBAR */
+    .preview-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .source-pills {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 2px;
+      gap: 3px;
+    }
+
+    .source-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--sans);
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 5px 9px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .source-pill.active {
+      background: var(--surface-elevated);
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+
+    .icon-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 7px;
+      padding: 5px 9px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .icon-btn:active {
+      color: #ffffff;
+      border-color: var(--border-focus);
+    }
+
+    /* VIEWPORT CARD */
+    .viewport-card {
+      position: relative;
+      width: 100%;
+      height: 350px;
+      background: #000000;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    #viewCanvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* BADGES */
+    .view-badge {
+      position: absolute;
+      top: 10px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 5px;
+      padding: 3px 7px;
+      font-family: var(--sans);
+      font-size: 9px;
+      font-weight: 600;
+      color: #f4f4f5;
+      letter-spacing: 0.5px;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .badge-left {
+      left: 10px;
+    }
+
+    .badge-right {
+      right: 10px;
+    }
+
+    /* SPLIT DIVIDER & THUMB */
+    .split-divider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(0,0,0,0.8);
+      cursor: ew-resize;
+      z-index: 10;
+      transform: translateX(-50%);
+    }
+
+    .split-thumb {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 32px;
+      height: 32px;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000000;
+      font-size: 11px;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    /* PLAY BUTTON OVERLAY */
+    .play-toggle-btn {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 5;
+      transition: all 0.15s ease;
+    }
+
+    .play-toggle-btn:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* PREVIEW STATUS */
+    .preview-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-top: 10px;
+      font-family: var(--sans);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .status-dot {
+      color: var(--signal-green);
+      font-size: 8px;
+    }
+
     /* COMPACT CINE FOOTNOTE */
     .footnote {
       text-align: center;
@@ -426,6 +655,20 @@
     </div>
   </header>
 
+  <!-- NAVIGATION TABS -->
+  <nav class="nav-tabs">
+    <button class="nav-tab active" id="btnTabGenerator">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07"/></svg>
+      <span id="tTabGenerator">Студия LUT</span>
+    </button>
+    <button class="nav-tab" id="btnTabPreview">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <span id="tTabPreview">Превью видео</span>
+    </button>
+  </nav>
+
+  <!-- TAB 1: LUT GENERATOR -->
+  <div class="tab-pane active" id="paneGenerator">
   <!-- 2. DOWNLOAD REFERENCE BAR (REPLACES BULKY MATRIX PHOTO) -->
   <section class="ref-bar">
     <div class="ref-info">
@@ -480,6 +723,60 @@
       <span id="tBtnBake">Скачать LUT</span>
     </button>
   </section>
+  </div><!-- /paneGenerator -->
+
+  <!-- TAB 2: VIDEO PREVIEW (SPLITTER) -->
+  <div class="tab-pane" id="panePreview" style="display: none;">
+    <!-- Preview Toolbar -->
+    <div class="preview-toolbar">
+      <div class="source-pills">
+        <button class="source-pill active" id="btnSourceDemo">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+          <span id="tSourceDemo">Демо Apple Log</span>
+        </button>
+        <button class="source-pill" id="btnSourceCustom">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span id="tSourceCustom">Свое видео</span>
+        </button>
+        <input type="file" id="videoInput" accept="video/mp4,video/quicktime,video/mov,video/webm" style="display:none;">
+      </div>
+      <button class="icon-btn" id="btnResetSplit" title="Сбросить на 50%">
+        <span style="font-family: var(--mono); font-size: 10px; font-weight: 600;">50%</span>
+      </button>
+    </div>
+
+    <!-- Interactive Video Viewport with Splitter -->
+    <div class="viewport-card" id="viewportCard">
+      <video id="playerVideo" playsinline muted loop crossorigin="anonymous" style="display: none;"></video>
+      <canvas id="viewCanvas" width="360" height="450"></canvas>
+
+      <!-- Corner Badges -->
+      <div class="view-badge badge-left" id="tBadgeBefore">ДО: APPLE LOG</div>
+      <div class="view-badge badge-right" id="tBadgeAfter">ПОСЛЕ: ПРЕСЕТ</div>
+
+      <!-- Draggable Split Divider -->
+      <div class="split-divider" id="splitDivider">
+        <div class="split-thumb">◀ ▶</div>
+      </div>
+
+      <!-- Play / Pause Overlay -->
+      <button class="play-toggle-btn" id="btnPlayToggle">
+        <svg id="iconPlay" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <svg id="iconPause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      </button>
+    </div>
+
+    <!-- Preset Status Banner -->
+    <div class="preview-status" id="previewStatus">
+      <span class="status-dot">●</span>
+      <span id="tPreviewStatusText">Базовый кино-профиль • Загрузите свой Hald в первой вкладке</span>
+    </div>
+
+    <!-- Direct Download in Preview Tab -->
+    <button class="btn-solid" id="btnBakeFromPreview" style="margin-top: 10px;">
+      <span id="tBtnBakePreview">Скачать LUT</span>
+    </button>
+  </div><!-- /panePreview -->
 
   <footer class="footnote">
     LUT studio • made by AP
@@ -513,6 +810,15 @@
         namePlaceholder: "Имя файла (напр. Cine_Warm)",
         btnBake: "Скачать LUT",
         btnBaking: "ГЕНЕРАЦИЯ LUT...",
+        tabGenerator: "Студия LUT",
+        tabPreview: "Превью видео",
+        sourceDemo: "Демо Apple Log",
+        sourceCustom: "Свое видео",
+        badgeBefore: "ДО: APPLE LOG",
+        badgeAfter: "ПОСЛЕ: ПРЕСЕТ",
+        previewNoPreset: "Базовый кино-профиль • Загрузите свой Hald во вкладке «Студия LUT»",
+        previewPresetLoaded: "Применен пресет: {name}",
+        previewCustomVideoLoaded: "Видео: {name}",
         toastNeutralSaved: "✓ neutral_hald8.png сохранен",
         toastBadImage: "⚠ Требуется изображение (PNG/JPEG)",
         toastTooLarge: "⚠ Файл слишком большой (макс. 25MB)",
@@ -537,6 +843,15 @@
         namePlaceholder: "File title (e.g. Cine_Warm)",
         btnBake: "Download LUT",
         btnBaking: "GENERATING LUT...",
+        tabGenerator: "LUT Studio",
+        tabPreview: "Video Preview",
+        sourceDemo: "Demo Apple Log",
+        sourceCustom: "Your Video",
+        badgeBefore: "BEFORE: APPLE LOG",
+        badgeAfter: "AFTER: PRESET",
+        previewNoPreset: "Base Cinema Look • Upload your Hald in «LUT Studio» tab",
+        previewPresetLoaded: "Applied preset: {name}",
+        previewCustomVideoLoaded: "Video: {name}",
         toastNeutralSaved: "✓ neutral_hald8.png saved",
         toastBadImage: "⚠ Image file required (PNG/JPEG)",
         toastTooLarge: "⚠ File too large (max 25MB)",
@@ -604,7 +919,16 @@
       document.getElementById('txtName').placeholder = t.namePlaceholder;
       if (!btnBake.disabled) {
         document.getElementById('tBtnBake').textContent = t.btnBake;
+        document.getElementById('tBtnBakePreview').textContent = t.btnBake;
       }
+
+      document.getElementById('tTabGenerator').textContent = t.tabGenerator;
+      document.getElementById('tTabPreview').textContent = t.tabPreview;
+      document.getElementById('tSourceDemo').textContent = t.sourceDemo;
+      document.getElementById('tSourceCustom').textContent = t.sourceCustom;
+      document.getElementById('tBadgeBefore').textContent = t.badgeBefore;
+      document.getElementById('tBadgeAfter').textContent = t.badgeAfter;
+      if (typeof updatePreviewStatusText === 'function') updatePreviewStatusText();
 
       document.getElementById('btnLangRu').classList.toggle('active', lang === 'ru');
       document.getElementById('btnLangEn').classList.toggle('active', lang === 'en');
@@ -731,6 +1055,10 @@
           txtName.value = cleanStem || "Grade_Look";
 
           btnBake.disabled = false;
+          if (btnBakeFromPreview) btnBakeFromPreview.disabled = false;
+          buildFastLut();
+          updatePreviewStatusText();
+
           haptic('success');
           showToast(i18n[currentLang].toastMatrixParsed);
         };
@@ -756,7 +1084,10 @@
       });
     }
 
-    setupSegmented('segPipeline', (v) => { selectedPipeline = v; });
+    setupSegmented('segPipeline', (v) => { 
+      selectedPipeline = v; 
+      buildFastLut();
+    });
     setupSegmented('segSize', (v) => { selectedSize = parseInt(v, 10); });
 
     // Slider
@@ -764,6 +1095,7 @@
     const valStrength = document.getElementById('valStrength');
     rangeStrength.addEventListener('input', (e) => {
       valStrength.textContent = `${e.target.value}%`;
+      buildFastLut();
     });
 
     // Apple Log Mathematics
@@ -932,6 +1264,257 @@
         }
       }, 40);
     });
+
+    // --- TAB SWITCHING ---
+    const btnTabGenerator = document.getElementById('btnTabGenerator');
+    const btnTabPreview = document.getElementById('btnTabPreview');
+    const paneGenerator = document.getElementById('paneGenerator');
+    const panePreview = document.getElementById('panePreview');
+
+    btnTabGenerator.addEventListener('click', () => {
+      haptic('impact');
+      btnTabGenerator.classList.add('active');
+      btnTabPreview.classList.remove('active');
+      paneGenerator.style.display = 'flex';
+      panePreview.style.display = 'none';
+      stopPreviewLoop();
+    });
+
+    btnTabPreview.addEventListener('click', () => {
+      haptic('impact');
+      btnTabPreview.classList.add('active');
+      btnTabGenerator.classList.remove('active');
+      paneGenerator.style.display = 'none';
+      panePreview.style.display = 'flex';
+      buildFastLut();
+      updatePreviewStatusText();
+      startPreviewLoop();
+    });
+
+    // --- PREVIEW PLAYER & FAST LUT ENGINE ---
+    const viewCanvas = document.getElementById('viewCanvas');
+    const viewCtx = viewCanvas.getContext('2d');
+    const viewportCard = document.getElementById('viewportCard');
+    const splitDivider = document.getElementById('splitDivider');
+    const playerVideo = document.getElementById('playerVideo');
+    const btnPlayToggle = document.getElementById('btnPlayToggle');
+    const iconPlay = document.getElementById('iconPlay');
+    const iconPause = document.getElementById('iconPause');
+    const btnSourceDemo = document.getElementById('btnSourceDemo');
+    const btnSourceCustom = document.getElementById('btnSourceCustom');
+    const videoInput = document.getElementById('videoInput');
+    const btnResetSplit = document.getElementById('btnResetSplit');
+    const btnBakeFromPreview = document.getElementById('btnBakeFromPreview');
+    const tPreviewStatusText = document.getElementById('tPreviewStatusText');
+
+    let currentSourceMode = 'demo';
+    let isPlaying = true;
+    let splitPos = 0.50;
+    let previewAnimFrame = null;
+    let customVideoName = '';
+
+    const demoImg = new Image();
+    demoImg.src = 'sample_log.png';
+
+    const offCanvas = document.createElement('canvas');
+    offCanvas.width = 360;
+    offCanvas.height = 450;
+    const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
+
+    let fastLut = null;
+
+    function buildFastLut() {
+      const N = 33;
+      fastLut = new Uint8ClampedArray(N * N * N * 3);
+      const strength = parseFloat(rangeStrength.value) / 100.0;
+
+      for (let b = 0; b < N; b++) {
+        const b_in = b / (N - 1.0);
+        for (let g = 0; g < N; g++) {
+          const g_in = g / (N - 1.0);
+          for (let r = 0; r < N; r++) {
+            const r_in = r / (N - 1.0);
+
+            let lr = r_in, lg = g_in, lb = b_in;
+            if (selectedPipeline === 'apple_log') {
+              const norm = appleLogNorm(r_in, g_in, b_in);
+              lr = norm[0]; lg = norm[1]; lb = norm[2];
+            }
+
+            let or = lr, og = lg, ob = lb;
+            if (activeLutPixels) {
+              const s = sampleHald(lr, lg, lb, activeLutPixels);
+              or = s[0]; og = s[1]; ob = s[2];
+              if (strength < 1.0) {
+                const br = (selectedPipeline === 'apple_log') ? lr : r_in;
+                const bg = (selectedPipeline === 'apple_log') ? lg : g_in;
+                const bb = (selectedPipeline === 'apple_log') ? lb : b_in;
+                or = (1.0 - strength) * br + strength * or;
+                og = (1.0 - strength) * bg + strength * og;
+                ob = (1.0 - strength) * bb + strength * ob;
+              }
+            }
+
+            const idx = (b * N * N + g * N + r) * 3;
+            fastLut[idx] = Math.min(255, Math.max(0, Math.round(or * 255)));
+            fastLut[idx + 1] = Math.min(255, Math.max(0, Math.round(og * 255)));
+            fastLut[idx + 2] = Math.min(255, Math.max(0, Math.round(ob * 255)));
+          }
+        }
+      }
+    }
+
+    function updatePreviewStatusText() {
+      if (!tPreviewStatusText) return;
+      const t = i18n[currentLang];
+      if (currentSourceMode === 'custom' && customVideoName) {
+        tPreviewStatusText.textContent = t.previewCustomVideoLoaded.replace('{name}', customVideoName);
+      } else if (activeLutPixels) {
+        tPreviewStatusText.textContent = t.previewPresetLoaded.replace('{name}', txtName.value || 'Custom');
+      } else {
+        tPreviewStatusText.textContent = t.previewNoPreset;
+      }
+      btnBakeFromPreview.disabled = !activeLutPixels;
+    }
+
+    // Splitter Dragging Interaction
+    let isDragging = false;
+    function setSplit(clientX) {
+      const rect = viewportCard.getBoundingClientRect();
+      const ratio = Math.max(0.02, Math.min(0.98, (clientX - rect.left) / rect.width));
+      splitPos = ratio;
+      splitDivider.style.left = (splitPos * 100) + '%';
+    }
+
+    viewportCard.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      viewportCard.setPointerCapture(e.pointerId);
+      setSplit(e.clientX);
+    });
+    viewportCard.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      setSplit(e.clientX);
+    });
+    const stopSplit = () => { isDragging = false; };
+    viewportCard.addEventListener('pointerup', stopSplit);
+    viewportCard.addEventListener('pointercancel', stopSplit);
+
+    btnResetSplit.addEventListener('click', () => {
+      haptic('impact');
+      splitPos = 0.50;
+      splitDivider.style.left = '50%';
+    });
+
+    // Source Buttons
+    btnSourceDemo.addEventListener('click', () => {
+      haptic('impact');
+      currentSourceMode = 'demo';
+      btnSourceDemo.classList.add('active');
+      btnSourceCustom.classList.remove('active');
+      playerVideo.pause();
+      updatePreviewStatusText();
+    });
+
+    btnSourceCustom.addEventListener('click', () => {
+      haptic('impact');
+      videoInput.click();
+    });
+
+    videoInput.addEventListener('change', (e) => {
+      if (e.target.files.length) {
+        const file = e.target.files[0];
+        customVideoName = file.name;
+        playerVideo.src = URL.createObjectURL(file);
+        playerVideo.play().catch(() => {});
+        currentSourceMode = 'custom';
+        btnSourceCustom.classList.add('active');
+        btnSourceDemo.classList.remove('active');
+        isPlaying = true;
+        iconPlay.style.display = 'none';
+        iconPause.style.display = 'block';
+        updatePreviewStatusText();
+        showToast(i18n[currentLang].previewCustomVideoLoaded.replace('{name}', file.name));
+      }
+    });
+
+    // Play / Pause Toggle
+    btnPlayToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      haptic('impact');
+      isPlaying = !isPlaying;
+      if (currentSourceMode === 'custom') {
+        if (isPlaying) playerVideo.play().catch(() => {});
+        else playerVideo.pause();
+      }
+      iconPlay.style.display = isPlaying ? 'none' : 'block';
+      iconPause.style.display = isPlaying ? 'block' : 'none';
+    });
+
+    // Direct Bake in Preview Tab
+    btnBakeFromPreview.addEventListener('click', () => {
+      btnBake.click();
+    });
+
+    // Animation Loop
+    function renderFrame() {
+      if (panePreview.style.display !== 'none') {
+        const W = viewCanvas.width;
+        const H = viewCanvas.height;
+
+        // 1. Draw source to offscreen
+        if (currentSourceMode === 'custom' && playerVideo.readyState >= 2) {
+          offCtx.drawImage(playerVideo, 0, 0, W, H);
+        } else if (demoImg.complete) {
+          const time = isPlaying ? (performance.now() * 0.001) : 0;
+          const zoom = 1.0 + 0.015 * Math.sin(time * 0.9);
+          const panX = 4 * Math.cos(time * 0.7);
+          const panY = 3 * Math.sin(time * 0.8);
+
+          offCtx.save();
+          offCtx.translate(W / 2 + panX, H / 2 + panY);
+          offCtx.scale(zoom, zoom);
+          offCtx.drawImage(demoImg, -W / 2, -H / 2, W, H);
+          offCtx.restore();
+        }
+
+        // 2. Render Left (Raw) and Right (Graded) on viewCanvas
+        const splitX = Math.round(W * splitPos);
+        viewCtx.drawImage(offCanvas, 0, 0, W, H);
+
+        const rightW = W - splitX;
+        if (rightW > 0 && fastLut) {
+          const imgData = offCtx.getImageData(splitX, 0, rightW, H);
+          const d = imgData.data;
+
+          for (let i = 0; i < d.length; i += 4) {
+            const r = (d[i] * 32) >> 8;
+            const g = (d[i + 1] * 32) >> 8;
+            const b = (d[i + 2] * 32) >> 8;
+            const idx = (b * 1089 + g * 33 + r) * 3;
+            d[i] = fastLut[idx];
+            d[i + 1] = fastLut[idx + 1];
+            d[i + 2] = fastLut[idx + 2];
+          }
+
+          viewCtx.putImageData(imgData, splitX, 0);
+        }
+      }
+
+      previewAnimFrame = requestAnimationFrame(renderFrame);
+    }
+
+    function startPreviewLoop() {
+      if (!previewAnimFrame) {
+        previewAnimFrame = requestAnimationFrame(renderFrame);
+      }
+    }
+
+    function stopPreviewLoop() {
+      if (previewAnimFrame) {
+        cancelAnimationFrame(previewAnimFrame);
+        previewAnimFrame = null;
+      }
+    }
 
     function showToast(msg) {
       const t = document.getElementById('toast');
