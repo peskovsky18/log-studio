@@ -275,17 +275,6 @@
       box-shadow: 0 1px 4px rgba(0,0,0,0.4);
     }
 
-    .pipeline-hint {
-      font-family: var(--sans);
-      font-size: 11px;
-      line-height: 1.4;
-      color: #a1a1aa;
-      margin-top: -3px;
-      margin-bottom: 9px;
-      padding: 0 2px;
-      letter-spacing: -0.1px;
-    }
-
     /* SLIDER CONTROL */
     .slider-row {
       display: flex;
@@ -469,7 +458,6 @@
       <button class="segment-btn active" data-val="apple_log" id="tPipeLog">Apple Log &rarr; Rec.709</button>
       <button class="segment-btn" data-val="creative_only" id="tPipeCreative">Rec.709 (Creative)</button>
     </div>
-    <div class="pipeline-hint" id="tPipeHint">⚡️ Режим All-in-One: наложение прямо на серое Apple Log видео с iPhone</div>
 
     <!-- LUT Resolution -->
     <div class="segmented" id="segSize">
@@ -519,8 +507,6 @@
         section2: "2. Калибровка вывода .CUBE",
         pipeCreative: "Rec.709 (Creative)",
         pipeLog: "Apple Log → Rec.709",
-        pipeHintAppleLog: "⚡️ Режим All-in-One: наложение прямо на серое Apple Log видео с iPhone",
-        pipeHintCreative: "Для стандартного Rec.709 видео или после базового CST",
         size33: "33×33×33 (CapCut / VN)",
         size64: "64×64×64 (Master Studio)",
         intensity: "Интенсивность цвета",
@@ -545,8 +531,6 @@
         section2: "2. Output Calibration (.CUBE)",
         pipeCreative: "Rec.709 (Creative)",
         pipeLog: "Apple Log → Rec.709",
-        pipeHintAppleLog: "⚡️ All-in-One: directly grades flat Apple Log video from iPhone",
-        pipeHintCreative: "For standard Rec.709 footage or after base CST normalization",
         size33: "33×33×33 (CapCut / VN)",
         size64: "64×64×64 (Master Studio)",
         intensity: "Color Intensity",
@@ -621,7 +605,6 @@
       if (!btnBake.disabled) {
         document.getElementById('tBtnBake').textContent = t.btnBake;
       }
-      updatePipeHint();
 
       document.getElementById('btnLangRu').classList.toggle('active', lang === 'ru');
       document.getElementById('btnLangEn').classList.toggle('active', lang === 'en');
@@ -760,15 +743,6 @@
     let selectedPipeline = 'apple_log';
     let selectedSize = 33;
 
-    function updatePipeHint() {
-      const hint = document.getElementById('tPipeHint');
-      if (hint && i18n[currentLang]) {
-        hint.textContent = (selectedPipeline === 'apple_log')
-          ? i18n[currentLang].pipeHintAppleLog
-          : i18n[currentLang].pipeHintCreative;
-      }
-    }
-
     function setupSegmented(containerId, onChange) {
       const container = document.getElementById(containerId);
       const btns = container.querySelectorAll('.segment-btn');
@@ -782,10 +756,7 @@
       });
     }
 
-    setupSegmented('segPipeline', (v) => { 
-      selectedPipeline = v; 
-      updatePipeHint();
-    });
+    setupSegmented('segPipeline', (v) => { selectedPipeline = v; });
     setupSegmented('segSize', (v) => { selectedSize = parseInt(v, 10); });
 
     // Slider
