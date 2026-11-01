@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://telegram.org; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://api.telegram.org; object-src 'none'; base-uri 'self';">
+  <meta name="referrer" content="no-referrer">
   <title>LUT Studio — 3D LUT Lab</title>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -512,6 +514,7 @@
         btnBaking: "ГЕНЕРАЦИЯ .CUBE...",
         toastNeutralSaved: "✓ neutral_hald8.png сохранен",
         toastBadImage: "⚠ Требуется изображение (PNG/JPEG)",
+        toastTooLarge: "⚠ Файл слишком большой (макс. 25MB)",
         toastMatrixParsed: "✓ Цветовая матрица зафиксирована",
         toastExported: "✓ {title}.cube экспортирован",
         toastError: "⚠ Ошибка генерации"
@@ -537,6 +540,7 @@
         btnBaking: "GENERATING .CUBE...",
         toastNeutralSaved: "✓ neutral_hald8.png saved",
         toastBadImage: "⚠ Image file required (PNG/JPEG)",
+        toastTooLarge: "⚠ File too large (max 25MB)",
         toastMatrixParsed: "✓ Color matrix locked in",
         toastExported: "✓ {title}.cube exported",
         toastError: "⚠ Generation error"
@@ -708,6 +712,10 @@
         showToast(i18n[currentLang].toastBadImage);
         return;
       }
+      if (file.size > 25 * 1024 * 1024) {
+        showToast(i18n[currentLang].toastTooLarge);
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -874,7 +882,8 @@
         try {
           const N = selectedSize;
           const strength = parseFloat(rangeStrength.value) / 100.0;
-          const title = txtName.value.trim() || 'LOG_LUT';
+          const rawTitle = txtName.value.trim() || 'LOG_LUT';
+          const title = rawTitle.replace(/[\r\n"<>\\/]/g, '_').slice(0, 64);
 
           let cube = `# Created by LUT Studio 3D LUT Lab\n`;
           cube += `# Architecture: Adobe Cube v1.0\n`;
