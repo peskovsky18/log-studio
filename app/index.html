@@ -429,17 +429,18 @@
     .source-pill {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       background: transparent;
       border: none;
       color: var(--text-muted);
       font-family: var(--sans);
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 600;
-      padding: 5px 9px;
+      padding: 5px 8px;
       border-radius: 5px;
       cursor: pointer;
       transition: all 0.15s ease;
+      white-space: nowrap;
     }
 
     .source-pill.active {
@@ -470,7 +471,8 @@
     .viewport-card {
       position: relative;
       width: 100%;
-      height: 350px;
+      aspect-ratio: 4 / 5;
+      max-height: 460px;
       background: #000000;
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -730,13 +732,17 @@
     <!-- Preview Toolbar -->
     <div class="preview-toolbar">
       <div class="source-pills">
-        <button class="source-pill active" id="btnSourceDemo">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
-          <span id="tSourceDemo">Демо Apple Log</span>
+        <button class="source-pill active" id="btnSourcePortrait">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="tSourcePortrait">Портрет</span>
+        </button>
+        <button class="source-pill" id="btnSourceNature">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 22 22 22"/></svg>
+          <span id="tSourceNature">Природа</span>
         </button>
         <button class="source-pill" id="btnSourceCustom">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          <span id="tSourceCustom">Свое видео</span>
+          <span id="tSourceCustom">Своё видео</span>
         </button>
         <input type="file" id="videoInput" accept="video/mp4,video/quicktime,video/mov,video/webm" style="display:none;">
       </div>
@@ -747,7 +753,7 @@
 
     <!-- Interactive Video Viewport with Splitter -->
     <div class="viewport-card" id="viewportCard">
-      <video id="playerVideo" playsinline muted loop crossorigin="anonymous" style="display: none;"></video>
+      <video id="playerVideo" playsinline webkit-playsinline muted loop crossorigin="anonymous" style="display: none;"></video>
       <canvas id="viewCanvas" width="360" height="450"></canvas>
 
       <!-- Corner Badges -->
@@ -812,12 +818,14 @@
         btnBaking: "ГЕНЕРАЦИЯ LUT...",
         tabGenerator: "Студия LUT",
         tabPreview: "Превью видео",
-        sourceDemo: "Демо Apple Log",
-        sourceCustom: "Свое видео",
+        sourcePortrait: "Портрет",
+        sourceNature: "Природа",
+        sourceCustom: "Своё видео",
         badgeBefore: "ДО: APPLE LOG",
         badgeAfter: "ПОСЛЕ: ПРЕСЕТ",
-        previewNoPreset: "Базовый кино-профиль • Загрузите свой Hald во вкладке «Студия LUT»",
-        previewPresetLoaded: "Применен пресет: {name}",
+        badgeAfterBase: "ПОСЛЕ: REC.709",
+        previewNoPreset: "Apple Log ➔ Rec.709 • Загрузите свой Hald в первой вкладке",
+        previewPresetLoaded: "Пресет: {name}",
         previewCustomVideoLoaded: "Видео: {name}",
         toastNeutralSaved: "✓ neutral_hald8.png сохранен",
         toastBadImage: "⚠ Требуется изображение (PNG/JPEG)",
@@ -845,11 +853,13 @@
         btnBaking: "GENERATING LUT...",
         tabGenerator: "LUT Studio",
         tabPreview: "Video Preview",
-        sourceDemo: "Demo Apple Log",
-        sourceCustom: "Your Video",
+        sourcePortrait: "Portrait",
+        sourceNature: "Nature",
+        sourceCustom: "Custom Video",
         badgeBefore: "BEFORE: APPLE LOG",
         badgeAfter: "AFTER: PRESET",
-        previewNoPreset: "Base Cinema Look • Upload your Hald in «LUT Studio» tab",
+        badgeAfterBase: "AFTER: REC.709",
+        previewNoPreset: "Apple Log ➔ Rec.709 • Upload your Hald in the first tab",
         previewPresetLoaded: "Applied preset: {name}",
         previewCustomVideoLoaded: "Video: {name}",
         toastNeutralSaved: "✓ neutral_hald8.png saved",
@@ -924,10 +934,14 @@
 
       document.getElementById('tTabGenerator').textContent = t.tabGenerator;
       document.getElementById('tTabPreview').textContent = t.tabPreview;
-      document.getElementById('tSourceDemo').textContent = t.sourceDemo;
-      document.getElementById('tSourceCustom').textContent = t.sourceCustom;
-      document.getElementById('tBadgeBefore').textContent = t.badgeBefore;
-      document.getElementById('tBadgeAfter').textContent = t.badgeAfter;
+      const elSP = document.getElementById('tSourcePortrait');
+      if (elSP) elSP.textContent = t.sourcePortrait;
+      const elSN = document.getElementById('tSourceNature');
+      if (elSN) elSN.textContent = t.sourceNature;
+      const elSC = document.getElementById('tSourceCustom');
+      if (elSC) elSC.textContent = t.sourceCustom;
+      const elBB = document.getElementById('tBadgeBefore');
+      if (elBB) elBB.textContent = t.badgeBefore;
       if (typeof updatePreviewStatusText === 'function') updatePreviewStatusText();
 
       document.getElementById('btnLangRu').classList.toggle('active', lang === 'ru');
@@ -1130,18 +1144,26 @@
 
     function appleLogNorm(r_in, g_in, b_in) {
       function decode(p) {
-        if (p >= P_T) return Math.pow(2.0, (p - DELTA) / GAMMA) - BETA;
-        if (p >= 0.0) return Math.sqrt(Math.max(0.0, p / SIGMA)) + R_0;
-        return R_0;
+        let val;
+        if (p >= P_T) val = Math.pow(2.0, (p - DELTA) / GAMMA) - BETA;
+        else if (p >= 0.0) val = Math.sqrt(Math.max(0.0, p / SIGMA)) + R_0;
+        else val = 0.0;
+        return Math.max(0.0, val);
       }
       const lr = decode(r_in), lg = decode(g_in), lb = decode(b_in);
-      const r709 = M_CALIB[0][0]*lr + M_CALIB[0][1]*lg + M_CALIB[0][2]*lb;
-      const g709 = M_CALIB[1][0]*lr + M_CALIB[1][1]*lg + M_CALIB[1][2]*lb;
-      const b709 = M_CALIB[2][0]*lr + M_CALIB[2][1]*lg + M_CALIB[2][2]*lb;
+      const r709 = Math.max(0.0, M_CALIB[0][0]*lr + M_CALIB[0][1]*lg + M_CALIB[0][2]*lb);
+      const g709 = Math.max(0.0, M_CALIB[1][0]*lr + M_CALIB[1][1]*lg + M_CALIB[1][2]*lb);
+      const b709 = Math.max(0.0, M_CALIB[2][0]*lr + M_CALIB[2][1]*lg + M_CALIB[2][2]*lb);
 
       const y_lin = 0.2126 * lr + 0.7152 * lg + 0.0722 * lb;
       const y_disp = 0.2126 * interpSpline(r_in) + 0.7152 * interpSpline(g_in) + 0.0722 * interpSpline(b_in);
-      const scale = y_disp / Math.max(1e-5, y_lin);
+      
+      let scale = 1.0;
+      if (y_lin > 1e-4) {
+        scale = Math.min(3.5, y_disp / y_lin);
+      } else {
+        scale = y_disp / 1e-4;
+      }
 
       return [
         Math.min(1.0, Math.max(0.0, r709 * scale)),
@@ -1277,6 +1299,7 @@
       btnTabPreview.classList.remove('active');
       paneGenerator.style.display = 'flex';
       panePreview.style.display = 'none';
+      playerVideo.pause();
       stopPreviewLoop();
     });
 
@@ -1288,6 +1311,9 @@
       panePreview.style.display = 'flex';
       buildFastLut();
       updatePreviewStatusText();
+      if (isPlaying) {
+        playerVideo.play().catch(() => {});
+      }
       startPreviewLoop();
     });
 
@@ -1300,21 +1326,40 @@
     const btnPlayToggle = document.getElementById('btnPlayToggle');
     const iconPlay = document.getElementById('iconPlay');
     const iconPause = document.getElementById('iconPause');
-    const btnSourceDemo = document.getElementById('btnSourceDemo');
+    const btnSourcePortrait = document.getElementById('btnSourcePortrait');
+    const btnSourceNature = document.getElementById('btnSourceNature');
     const btnSourceCustom = document.getElementById('btnSourceCustom');
     const videoInput = document.getElementById('videoInput');
     const btnResetSplit = document.getElementById('btnResetSplit');
     const btnBakeFromPreview = document.getElementById('btnBakeFromPreview');
     const tPreviewStatusText = document.getElementById('tPreviewStatusText');
+    const tBadgeAfter = document.getElementById('tBadgeAfter');
 
-    let currentSourceMode = 'demo';
+    const PREVIEW_SOURCES = {
+      portrait: {
+        video: 'sample_portrait.mp4',
+        poster: 'sample_portrait.jpg'
+      },
+      nature: {
+        video: 'sample_nature.mp4',
+        poster: 'sample_nature.jpg'
+      }
+    };
+
+    let currentSourceMode = 'portrait';
     let isPlaying = true;
     let splitPos = 0.50;
     let previewAnimFrame = null;
     let customVideoName = '';
 
     const demoImg = new Image();
-    demoImg.src = 'sample_log.png';
+    demoImg.src = PREVIEW_SOURCES.portrait.poster;
+
+    playerVideo.src = PREVIEW_SOURCES.portrait.video;
+    playerVideo.muted = true;
+    playerVideo.loop = true;
+    playerVideo.playsInline = true;
+    playerVideo.setAttribute('webkit-playsinline', 'true');
 
     const offCanvas = document.createElement('canvas');
     offCanvas.width = 360;
@@ -1367,6 +1412,9 @@
     function updatePreviewStatusText() {
       if (!tPreviewStatusText) return;
       const t = i18n[currentLang];
+      if (tBadgeAfter) {
+        tBadgeAfter.textContent = activeLutPixels ? t.badgeAfter : t.badgeAfterBase;
+      }
       if (currentSourceMode === 'custom' && customVideoName) {
         tPreviewStatusText.textContent = t.previewCustomVideoLoaded.replace('{name}', customVideoName);
       } else if (activeLutPixels) {
@@ -1405,14 +1453,32 @@
       splitDivider.style.left = '50%';
     });
 
-    // Source Buttons
-    btnSourceDemo.addEventListener('click', () => {
-      haptic('impact');
-      currentSourceMode = 'demo';
-      btnSourceDemo.classList.add('active');
-      btnSourceCustom.classList.remove('active');
-      playerVideo.pause();
+    // Source Switching
+    function setVideoSource(mode) {
+      currentSourceMode = mode;
+      btnSourcePortrait.classList.toggle('active', mode === 'portrait');
+      btnSourceNature.classList.toggle('active', mode === 'nature');
+      btnSourceCustom.classList.toggle('active', mode === 'custom');
+
+      if (mode === 'portrait' || mode === 'nature') {
+        const srcCfg = PREVIEW_SOURCES[mode];
+        demoImg.src = srcCfg.poster;
+        playerVideo.src = srcCfg.video;
+        if (isPlaying) {
+          playerVideo.play().catch(() => {});
+        }
+      }
       updatePreviewStatusText();
+    }
+
+    btnSourcePortrait.addEventListener('click', () => {
+      haptic('impact');
+      setVideoSource('portrait');
+    });
+
+    btnSourceNature.addEventListener('click', () => {
+      haptic('impact');
+      setVideoSource('nature');
     });
 
     btnSourceCustom.addEventListener('click', () => {
@@ -1425,14 +1491,8 @@
         const file = e.target.files[0];
         customVideoName = file.name;
         playerVideo.src = URL.createObjectURL(file);
-        playerVideo.play().catch(() => {});
-        currentSourceMode = 'custom';
-        btnSourceCustom.classList.add('active');
-        btnSourceDemo.classList.remove('active');
-        isPlaying = true;
-        iconPlay.style.display = 'none';
-        iconPause.style.display = 'block';
-        updatePreviewStatusText();
+        if (isPlaying) playerVideo.play().catch(() => {});
+        setVideoSource('custom');
         showToast(i18n[currentLang].previewCustomVideoLoaded.replace('{name}', file.name));
       }
     });
@@ -1442,9 +1502,10 @@
       e.stopPropagation();
       haptic('impact');
       isPlaying = !isPlaying;
-      if (currentSourceMode === 'custom') {
-        if (isPlaying) playerVideo.play().catch(() => {});
-        else playerVideo.pause();
+      if (isPlaying) {
+        playerVideo.play().catch(() => {});
+      } else {
+        playerVideo.pause();
       }
       iconPlay.style.display = isPlaying ? 'none' : 'block';
       iconPause.style.display = isPlaying ? 'block' : 'none';
@@ -1455,29 +1516,37 @@
       btnBake.click();
     });
 
+    // Helper: draw image or video with object-fit: cover
+    function drawSourceCover(ctx, source, dstW, dstH) {
+      const sw = source.videoWidth || source.naturalWidth || source.width || dstW;
+      const sh = source.videoHeight || source.naturalHeight || source.height || dstH;
+      const sAspect = sw / sh;
+      const dAspect = dstW / dstH;
+      let sx = 0, sy = 0, swCover = sw, shCover = sh;
+      if (sAspect > dAspect) {
+        swCover = sh * dAspect;
+        sx = (sw - swCover) / 2;
+      } else {
+        shCover = sw / dAspect;
+        sy = Math.max(0, (sh - shCover) * 0.15);
+      }
+      ctx.drawImage(source, sx, sy, swCover, shCover, 0, 0, dstW, dstH);
+    }
+
     // Animation Loop
     function renderFrame() {
       if (panePreview.style.display !== 'none') {
         const W = viewCanvas.width;
         const H = viewCanvas.height;
 
-        // 1. Draw source to offscreen
-        if (currentSourceMode === 'custom' && playerVideo.readyState >= 2) {
-          offCtx.drawImage(playerVideo, 0, 0, W, H);
-        } else if (demoImg.complete) {
-          const time = isPlaying ? (performance.now() * 0.001) : 0;
-          const zoom = 1.0 + 0.015 * Math.sin(time * 0.9);
-          const panX = 4 * Math.cos(time * 0.7);
-          const panY = 3 * Math.sin(time * 0.8);
-
-          offCtx.save();
-          offCtx.translate(W / 2 + panX, H / 2 + panY);
-          offCtx.scale(zoom, zoom);
-          offCtx.drawImage(demoImg, -W / 2, -H / 2, W, H);
-          offCtx.restore();
+        // 1. Draw source to offscreen: video frame if ready, else poster image
+        if (playerVideo.readyState >= 2) {
+          drawSourceCover(offCtx, playerVideo, W, H);
+        } else if (demoImg.complete && demoImg.naturalWidth > 0) {
+          drawSourceCover(offCtx, demoImg, W, H);
         }
 
-        // 2. Render Left (Raw) and Right (Graded) on viewCanvas
+        // 2. Render Left (Raw Apple Log) and Right (Graded) on viewCanvas
         const splitX = Math.round(W * splitPos);
         viewCtx.drawImage(offCanvas, 0, 0, W, H);
 
