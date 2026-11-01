@@ -718,7 +718,7 @@
       <div class="drop-sub" id="dropSub">Нажмите для выбора из фото или файлов</div>
     </div>
     <div class="upload-tip" id="tUploadTip">
-      💡 Экспортируйте из Lightroom в PNG без сжатия (sRGB), чтобы точно передать все оттенки
+      Экспортируйте из Lightroom в PNG без сжатия (sRGB), чтобы точно передать все оттенки
     </div>
   </section>
 
@@ -838,7 +838,7 @@
         section2: "2. Калибровка вывода .CUBE",
         pipeCreative: "Rec.709 (CapCut / VN)",
         pipeLog: "Apple Log → Rec.709",
-        uploadTip: "💡 Экспортируйте из Lightroom в PNG без сжатия (sRGB), чтобы точно передать все оттенки",
+        uploadTip: "Экспортируйте из Lightroom в PNG без сжатия (sRGB), чтобы точно передать все оттенки",
         size33: "33×33×33 (CapCut / VN)",
         size64: "64×64×64 (Master Studio)",
         intensity: "Интенсивность цвета",
@@ -853,15 +853,15 @@
         badgeBefore: "ДО: APPLE LOG",
         badgeAfter: "ПОСЛЕ: ПРЕСЕТ",
         badgeAfterBase: "ПОСЛЕ: REC.709",
-        previewNoPreset: "Apple Log ➔ Rec.709 • Загрузите свой Hald в первой вкладке",
+        previewNoPreset: "Apple Log -> Rec.709 • Загрузите свой Hald в первой вкладке",
         previewPresetLoaded: "Пресет: {name}",
         previewCustomVideoLoaded: "Видео: {name}",
-        toastNeutralSaved: "✓ neutral_hald8.png сохранен",
-        toastBadImage: "⚠ Требуется изображение (PNG/JPEG)",
-        toastTooLarge: "⚠ Файл слишком большой (макс. 25MB)",
-        toastMatrixParsed: "✓ Цветовая матрица зафиксирована",
-        toastExported: "✓ {title}.cube экспортирован",
-        toastError: "⚠ Ошибка генерации"
+        toastNeutralSaved: "neutral_hald8.png сохранен",
+        toastBadImage: "Требуется изображение (PNG/JPEG)",
+        toastTooLarge: "Файл слишком большой (макс. 25MB)",
+        toastMatrixParsed: "Цветовая матрица зафиксирована",
+        toastExported: "{title}.cube экспортирован",
+        toastError: "Ошибка генерации"
       },
       en: {
         refTitle: "Reference Pattern",
@@ -874,7 +874,7 @@
         section2: "2. Output Calibration (.CUBE)",
         pipeCreative: "Rec.709 (CapCut / VN)",
         pipeLog: "Apple Log → Rec.709",
-        uploadTip: "💡 Export from Lightroom in uncompressed PNG (sRGB) for exact color fidelity",
+        uploadTip: "Export from Lightroom in uncompressed PNG (sRGB) for exact color fidelity",
         size33: "33×33×33 (CapCut / VN)",
         size64: "64×64×64 (Master Studio)",
         intensity: "Color Intensity",
@@ -889,15 +889,15 @@
         badgeBefore: "BEFORE: APPLE LOG",
         badgeAfter: "AFTER: PRESET",
         badgeAfterBase: "AFTER: REC.709",
-        previewNoPreset: "Apple Log ➔ Rec.709 • Upload your Hald in the first tab",
+        previewNoPreset: "Apple Log -> Rec.709 • Upload your Hald in the first tab",
         previewPresetLoaded: "Applied preset: {name}",
         previewCustomVideoLoaded: "Video: {name}",
-        toastNeutralSaved: "✓ neutral_hald8.png saved",
-        toastBadImage: "⚠ Image file required (PNG/JPEG)",
-        toastTooLarge: "⚠ File too large (max 25MB)",
-        toastMatrixParsed: "✓ Color matrix locked in",
-        toastExported: "✓ {title}.cube exported",
-        toastError: "⚠ Generation error"
+        toastNeutralSaved: "neutral_hald8.png saved",
+        toastBadImage: "Image file required (PNG/JPEG)",
+        toastTooLarge: "File too large (max 25MB)",
+        toastMatrixParsed: "Color matrix locked in",
+        toastExported: "{title}.cube exported",
+        toastError: "Generation error"
       }
     };
 
@@ -1487,7 +1487,7 @@
       if ((currentSourceMode === 'custom' || currentSourceMode === 'custom_video' || currentSourceMode === 'custom_image') && customVideoName) {
         tPreviewStatusText.textContent = t.previewCustomVideoLoaded.replace('{name}', customVideoName);
       } else if (activeLutPixels) {
-        const modeLabel = (selectedPipeline === 'apple_log') ? 'Apple Log ➔ Rec.709' : 'CapCut / VN';
+        const modeLabel = (selectedPipeline === 'apple_log') ? 'Apple Log -> Rec.709' : 'CapCut / VN';
         tPreviewStatusText.textContent = `${t.previewPresetLoaded.replace('{name}', txtName.value || 'Custom')} • ${modeLabel}`;
       } else {
         tPreviewStatusText.textContent = t.previewNoPreset;
@@ -1589,7 +1589,7 @@
     playerVideo.addEventListener('error', () => {
       console.warn('Video element error:', playerVideo.error);
       if (currentSourceMode === 'custom_video') {
-        showToast('⚠ Видео загружается или кодек не поддерживается');
+        showToast('Видео загружается или кодек не поддерживается');
       }
     });
 
