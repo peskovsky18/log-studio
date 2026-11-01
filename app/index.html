@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>LOG Studio — 3D LUT Lab</title>
+  <title>LUT Studio — 3D LUT Lab</title>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
@@ -396,7 +396,7 @@
   <!-- 1. TOP BROADCAST BAR WITH LOGO ON RIGHT -->
   <header class="top-bar">
     <div class="brand">
-      <span class="brand-name">LOG Studio</span>
+      <span class="brand-name">LUT Studio</span>
     </div>
     <div class="top-right">
       <!-- RU / EN SWITCHER -->
@@ -405,7 +405,7 @@
         <button class="lang-btn" id="btnLangEn">EN</button>
       </div>
       <!-- OFFICIAL APP LOGO -->
-      <img src="icon.png" alt="LOG Studio Logo" class="app-logo">
+      <img src="icon.png" alt="LUT Studio Logo" class="app-logo">
     </div>
   </header>
 
@@ -847,7 +847,7 @@
           const strength = parseFloat(rangeStrength.value) / 100.0;
           const title = txtName.value.trim() || 'LOG_LUT';
 
-          let cube = `# Created by LOG Studio 3D LUT Lab\n`;
+          let cube = `# Created by LUT Studio 3D LUT Lab\n`;
           cube += `# Architecture: Adobe Cube v1.0\n`;
           cube += `TITLE "${title}"\n`;
           cube += `LUT_3D_SIZE ${N}\n`;
