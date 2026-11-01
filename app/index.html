@@ -35,21 +35,21 @@
       font-family: var(--sans);
       font-size: 13px;
       line-height: 1.4;
-      padding: 14px 14px 32px 14px;
+      padding: 12px 14px 24px 14px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* TOP BAR: Broadcast Hardware Aesthetic */
+    /* TOP BAR: Clean Broadcast Style with App Logo on Right */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .brand {
@@ -59,8 +59,8 @@
     }
 
     .brand-mark {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       background: var(--accent);
       border-radius: 2px;
       display: inline-block;
@@ -75,7 +75,7 @@
       color: #ffffff;
     }
 
-    .top-controls {
+    .top-right {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -109,115 +109,81 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     }
 
-    .sys-status {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    /* APP LOGO IN RIGHT CORNER */
+    .app-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      object-fit: cover;
+      display: block;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--signal-green);
-      box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
-    }
-
-    /* MATRIX HERO VIEWPORT */
-    .viewport-box {
+    /* DOWNLOAD REFERENCE BAR */
+    .ref-bar {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .viewport-header {
+      border-radius: 10px;
+      padding: 10px 12px;
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 8px;
+      align-items: center;
+      margin-bottom: 10px;
     }
 
-    .viewport-tag {
+    .ref-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .ref-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ref-sub {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-muted);
+    }
+
+    .btn-download-ref {
+      background: var(--surface-elevated);
+      color: #ffffff;
+      border: 1px solid var(--border-focus);
+      border-radius: 7px;
+      padding: 6px 10px;
       font-family: var(--mono);
       font-size: 10px;
       font-weight: 600;
-      color: var(--text-muted);
+      letter-spacing: 0.3px;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
     }
 
-    .viewport-meta {
-      font-family: var(--mono);
-      font-size: 10px;
+    .btn-download-ref:active {
+      background: var(--accent-glow);
+      border-color: var(--accent);
       color: var(--accent);
-      letter-spacing: 0.4px;
     }
 
-    .canvas-container {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      max-height: 220px;
-      background: #000;
-      border-radius: 8px;
-      overflow: hidden;
-      position: relative;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #matrixCanvas {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      image-rendering: pixelated;
-    }
-
-    .scanline-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-      background-size: 100% 4px;
-      opacity: 0.4;
-    }
-
-    .matrix-hud {
-      position: absolute;
-      bottom: 8px;
-      left: 8px;
-      right: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(9, 9, 11, 0.75);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      padding: 4px 8px;
-      font-family: var(--mono);
-      font-size: 10px;
-      color: #e4e4e7;
-    }
-
-    /* ACTION PANELS */
+    /* PANELS */
     .panel {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .panel-label {
@@ -231,6 +197,40 @@
       display: block;
     }
 
+    /* DROP BOX */
+    .drop-box {
+      border: 1.5px dashed var(--border-focus);
+      background: rgba(255, 255, 255, 0.015);
+      border-radius: 9px;
+      padding: 16px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .drop-box:hover, .drop-box.active {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .drop-box.loaded {
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.06);
+    }
+
+    .drop-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .drop-sub {
+      font-size: 10px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+    }
+
     /* SEGMENTED SWITCHES */
     .segmented {
       display: flex;
@@ -238,7 +238,7 @@
       padding: 3px;
       border-radius: 8px;
       border: 1px solid var(--border);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .segment-btn {
@@ -267,9 +267,9 @@
       display: flex;
       justify-content: space-between;
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .slider-row span.val {
@@ -284,7 +284,7 @@
       border-radius: 2px;
       outline: none;
       -webkit-appearance: none;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     input[type="range"]::-webkit-slider-thumb {
@@ -298,41 +298,6 @@
       cursor: pointer;
     }
 
-    /* FILE INPUT & DROP ZONE */
-    .drop-box {
-      border: 1.5px dashed var(--border-focus);
-      background: rgba(255, 255, 255, 0.015);
-      border-radius: 10px;
-      padding: 14px 10px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin-bottom: 10px;
-    }
-
-    .drop-box:hover, .drop-box.active {
-      border-color: var(--accent);
-      background: var(--accent-glow);
-    }
-
-    .drop-box.loaded {
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      background: rgba(16, 185, 129, 0.06);
-    }
-
-    .drop-text {
-      font-size: 12px;
-      font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 2px;
-    }
-
-    .drop-sub {
-      font-size: 10px;
-      font-family: var(--mono);
-      color: var(--text-muted);
-    }
-
     /* TEXT INPUT */
     input[type="text"] {
       width: 100%;
@@ -341,23 +306,23 @@
       border-radius: 8px;
       color: #ffffff;
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11px;
       padding: 8px 10px;
       outline: none;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     input[type="text"]:focus {
       border-color: var(--accent);
     }
 
-    /* BUTTONS */
+    /* BAKE BUTTON */
     .btn-solid {
       width: 100%;
       background: #ffffff;
       color: #000000;
       border: none;
-      border-radius: 10px;
+      border-radius: 9px;
       padding: 12px;
       font-size: 13px;
       font-weight: 700;
@@ -370,7 +335,6 @@
       justify-content: center;
       gap: 6px;
       transition: all 0.15s ease;
-      margin-bottom: 8px;
     }
 
     .btn-solid:active {
@@ -383,30 +347,6 @@
       color: #52525b;
       cursor: not-allowed;
       transform: none;
-    }
-
-    .btn-outline {
-      width: 100%;
-      background: transparent;
-      color: #d4d4d8;
-      border: 1px solid var(--border-focus);
-      border-radius: 8px;
-      padding: 9px;
-      font-size: 11px;
-      font-weight: 600;
-      font-family: var(--mono);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.15s ease;
-    }
-
-    .btn-outline:active {
-      background: rgba(255, 255, 255, 0.06);
     }
 
     /* COMPACT CINE FOOTNOTE */
@@ -453,39 +393,33 @@
 </head>
 <body>
 
-  <!-- 1. TOP BROADCAST BAR -->
+  <!-- 1. TOP BROADCAST BAR WITH LOGO ON RIGHT -->
   <header class="top-bar">
     <div class="brand">
       <span class="brand-mark"></span>
       <span class="brand-name">LOG Studio</span>
     </div>
-    <div class="top-controls">
+    <div class="top-right">
       <!-- RU / EN SWITCHER -->
       <div class="lang-switch">
         <button class="lang-btn active" id="btnLangRu">RU</button>
         <button class="lang-btn" id="btnLangEn">EN</button>
       </div>
-      <div class="sys-status">
-        <span class="status-dot"></span>
-        <span>3D LUT</span>
-      </div>
+      <!-- OFFICIAL APP LOGO -->
+      <img src="icon.png" alt="LOG Studio Logo" class="app-logo">
     </div>
   </header>
 
-  <!-- 2. THE SPECTRAL MATRIX HERO -->
-  <section class="viewport-box">
-    <div class="viewport-header">
-      <span class="viewport-tag" id="tMatrixTag">Спектральная матрица Hald 8</span>
-      <span class="viewport-meta" id="matrixMeta">64³ • 262 144 NODES</span>
+  <!-- 2. DOWNLOAD REFERENCE BAR (REPLACES BULKY MATRIX PHOTO) -->
+  <section class="ref-bar">
+    <div class="ref-info">
+      <span class="ref-title" id="tRefTitle">Эталонный паттерн</span>
+      <span class="ref-sub" id="tRefSub">Hald 8 • 512×512 PNG</span>
     </div>
-    <div class="canvas-container">
-      <canvas id="matrixCanvas" width="512" height="512"></canvas>
-      <div class="scanline-overlay"></div>
-      <div class="matrix-hud">
-        <span id="hudState">ЭТАЛОН: ИДЕНТИЧНЫЙ</span>
-        <span id="hudResolution">512×512 RAW</span>
-      </div>
-    </div>
+    <button class="btn-download-ref" id="btnGetNeutral">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      <span id="tBtnDownloadNeutral">Скачать файл</span>
+    </button>
   </section>
 
   <!-- 3. INPUT SELECTION -->
@@ -497,11 +431,6 @@
       <div class="drop-text" id="dropTitle">Загрузить обработанный Hald 8</div>
       <div class="drop-sub" id="dropSub">Нажмите для выбора из фото или файлов</div>
     </div>
-
-    <button class="btn-outline" id="btnGetNeutral">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-      <span id="tBtnDownloadNeutral">Скачать эталонный neutral_hald8.png</span>
-    </button>
   </section>
 
   <!-- 4. CALIBRATION & EXPORT -->
@@ -552,14 +481,13 @@
     // --- I18N DICTIONARY ---
     const i18n = {
       ru: {
-        matrixTag: "Спектральная матрица Hald 8",
-        hudDefault: "ЭТАЛОН: ИДЕНТИЧНЫЙ",
-        hudLoaded: "СТАТУС: ПРЕСЕТ ЗАГРУЖЕН",
+        refTitle: "Эталонный паттерн",
+        refSub: "Hald 8 • 512×512 PNG",
+        btnDownloadNeutral: "Скачать файл",
         section1: "1. Исходный пресет (Lightroom / VSCO / PS)",
         dropTitle: "Загрузить обработанный Hald 8",
         dropSub: "Нажмите для выбора из фото или файлов",
         dropLoadedSub: "64³ спектр считан • Нажмите для замены",
-        btnDownloadNeutral: "Скачать эталонный neutral_hald8.png",
         section2: "2. Калибровка вывода .CUBE",
         pipeCreative: "Rec.709 (Creative)",
         pipeLog: "Apple Log → Rec.709",
@@ -576,14 +504,13 @@
         toastError: "⚠ Ошибка генерации"
       },
       en: {
-        matrixTag: "Hald 8 Spectral Matrix",
-        hudDefault: "REFERENCE: NEUTRAL",
-        hudLoaded: "STATUS: PRESET CAPTURED",
+        refTitle: "Reference Pattern",
+        refSub: "Hald 8 • 512×512 PNG",
+        btnDownloadNeutral: "Download File",
         section1: "1. Source Preset (Lightroom / VSCO / PS)",
         dropTitle: "Upload Edited Hald 8",
         dropSub: "Tap to select from photos or files",
         dropLoadedSub: "64³ spectrum parsed • Tap to replace",
-        btnDownloadNeutral: "Download reference neutral_hald8.png",
         section2: "2. Output Calibration (.CUBE)",
         pipeCreative: "Rec.709 (Creative)",
         pipeLog: "Apple Log → Rec.709",
@@ -611,19 +538,16 @@
       if (tg.setHeaderColor) tg.setHeaderColor('#09090b');
       if (tg.setBackgroundColor) tg.setBackgroundColor('#09090b');
 
-      // Auto-detect language from Telegram user profile
       const userLang = tg.initDataUnsafe?.user?.language_code;
       if (userLang && !userLang.toLowerCase().startsWith('ru')) {
         currentLang = 'en';
       }
     } else {
-      // Fallback to browser language
       if (navigator.language && !navigator.language.toLowerCase().startsWith('ru')) {
         currentLang = 'en';
       }
     }
 
-    // Check saved preference
     const savedLang = localStorage.getItem('log_studio_lang');
     if (savedLang === 'ru' || savedLang === 'en') {
       currentLang = savedLang;
@@ -641,18 +565,18 @@
       localStorage.setItem('log_studio_lang', lang);
       const t = i18n[lang];
 
-      document.getElementById('tMatrixTag').textContent = t.matrixTag;
+      document.getElementById('tRefTitle').textContent = t.refTitle;
+      document.getElementById('tRefSub').textContent = t.refSub;
+      document.getElementById('tBtnDownloadNeutral').textContent = t.btnDownloadNeutral;
+
+      document.getElementById('tSection1').textContent = t.section1;
       if (!activeLutPixels) {
-        document.getElementById('hudState').textContent = t.hudDefault;
         document.getElementById('dropTitle').textContent = t.dropTitle;
         document.getElementById('dropSub').textContent = t.dropSub;
       } else {
-        document.getElementById('hudState').textContent = t.hudLoaded;
         document.getElementById('dropSub').textContent = t.dropLoadedSub;
       }
 
-      document.getElementById('tSection1').textContent = t.section1;
-      document.getElementById('tBtnDownloadNeutral').textContent = t.btnDownloadNeutral;
       document.getElementById('tSection2').textContent = t.section2;
       document.getElementById('tPipeCreative').textContent = t.pipeCreative;
       document.getElementById('tPipeLog').textContent = t.pipeLog;
@@ -678,14 +602,16 @@
       applyLanguage('en');
     });
 
-    // Canvas Matrix Rendering
-    const mCanvas = document.getElementById('matrixCanvas');
-    const mCtx = mCanvas.getContext('2d');
+    // Reference Hald Generator (offscreen)
     const LEVEL = 8;
     const CUBE_SIZE = LEVEL * LEVEL; // 64
     const DIM = LEVEL * CUBE_SIZE;   // 512
 
-    function renderNeutralMatrix(ctx) {
+    function createNeutralHaldData() {
+      const c = document.createElement('canvas');
+      c.width = DIM;
+      c.height = DIM;
+      const ctx = c.getContext('2d');
       const imgData = ctx.createImageData(DIM, DIM);
       const d = imgData.data;
 
@@ -712,16 +638,15 @@
         }
       }
       ctx.putImageData(imgData, 0, 0);
+      return c.toDataURL('image/png');
     }
 
-    renderNeutralMatrix(mCtx);
-
-    // Download Neutral Pattern
+    // Download Reference File
     document.getElementById('btnGetNeutral').addEventListener('click', () => {
       haptic('impact');
       const a = document.createElement('a');
       a.download = 'neutral_hald8.png';
-      a.href = mCanvas.toDataURL('image/png');
+      a.href = createNeutralHaldData();
       a.click();
       showToast(i18n[currentLang].toastNeutralSaved);
     });
@@ -731,8 +656,6 @@
     const fileInput = document.getElementById('fileInput');
     const dropTitle = document.getElementById('dropTitle');
     const dropSub = document.getElementById('dropSub');
-    const hudState = document.getElementById('hudState');
-    const hudRes = document.getElementById('hudResolution');
     const btnBake = document.getElementById('btnBake');
     const txtName = document.getElementById('txtName');
     const workCanvas = document.getElementById('workCanvas');
@@ -778,12 +701,6 @@
           const imgData = workCtx.getImageData(0, 0, DIM, DIM);
           activeLutPixels = imgData.data;
 
-          // Paint matrix canvas with new grade
-          mCtx.drawImage(img, 0, 0, DIM, DIM);
-
-          // Update HUD
-          hudState.textContent = i18n[currentLang].hudLoaded;
-          hudRes.textContent = `${file.name.slice(0, 16)}`;
           dropTitle.textContent = file.name;
           dropSub.textContent = i18n[currentLang].dropLoadedSub;
           dropBox.classList.add('loaded');
