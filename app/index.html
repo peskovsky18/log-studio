@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://api.telegram.org; object-src 'none'; base-uri 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' https://api.telegram.org; object-src 'none'; base-uri 'self';">
   <meta name="referrer" content="no-referrer">
   <title>LUT Studio — 3D LUT Lab</title>
 
@@ -490,6 +490,17 @@
       display: block;
     }
 
+    .offscreen-video {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0.001;
+      pointer-events: none;
+      z-index: -100;
+      top: 0;
+      left: 0;
+    }
+
     /* BADGES */
     .view-badge {
       position: absolute;
@@ -744,7 +755,7 @@
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           <span id="tSourceCustom">Своё видео</span>
         </button>
-        <input type="file" id="videoInput" accept="video/mp4,video/quicktime,video/mov,video/webm" style="display:none;">
+        <input type="file" id="videoInput" accept="video/*,image/*" style="display:none;">
       </div>
       <button class="icon-btn" id="btnResetSplit" title="Сбросить на 50%">
         <span style="font-family: var(--mono); font-size: 10px; font-weight: 600;">50%</span>
@@ -753,7 +764,7 @@
 
     <!-- Interactive Video Viewport with Splitter -->
     <div class="viewport-card" id="viewportCard">
-      <video id="playerVideo" playsinline webkit-playsinline muted loop crossorigin="anonymous" style="display: none;"></video>
+      <video id="playerVideo" class="offscreen-video" playsinline webkit-playsinline muted autoplay loop></video>
       <canvas id="viewCanvas" width="360" height="450"></canvas>
 
       <!-- Corner Badges -->
@@ -1357,9 +1368,12 @@
 
     playerVideo.src = PREVIEW_SOURCES.portrait.video;
     playerVideo.muted = true;
+    playerVideo.defaultMuted = true;
     playerVideo.loop = true;
     playerVideo.playsInline = true;
     playerVideo.setAttribute('webkit-playsinline', 'true');
+    playerVideo.setAttribute('playsinline', 'true');
+    playerVideo.load();
 
     const offCanvas = document.createElement('canvas');
     offCanvas.width = 360;
@@ -1415,7 +1429,7 @@
       if (tBadgeAfter) {
         tBadgeAfter.textContent = activeLutPixels ? t.badgeAfter : t.badgeAfterBase;
       }
-      if (currentSourceMode === 'custom' && customVideoName) {
+      if ((currentSourceMode === 'custom' || currentSourceMode === 'custom_video' || currentSourceMode === 'custom_image') && customVideoName) {
         tPreviewStatusText.textContent = t.previewCustomVideoLoaded.replace('{name}', customVideoName);
       } else if (activeLutPixels) {
         tPreviewStatusText.textContent = t.previewPresetLoaded.replace('{name}', txtName.value || 'Custom');
@@ -1458,12 +1472,13 @@
       currentSourceMode = mode;
       btnSourcePortrait.classList.toggle('active', mode === 'portrait');
       btnSourceNature.classList.toggle('active', mode === 'nature');
-      btnSourceCustom.classList.toggle('active', mode === 'custom');
+      btnSourceCustom.classList.toggle('active', mode === 'custom' || mode === 'custom_video' || mode === 'custom_image');
 
       if (mode === 'portrait' || mode === 'nature') {
         const srcCfg = PREVIEW_SOURCES[mode];
         demoImg.src = srcCfg.poster;
         playerVideo.src = srcCfg.video;
+        playerVideo.load();
         if (isPlaying) {
           playerVideo.play().catch(() => {});
         }
@@ -1487,13 +1502,38 @@
     });
 
     videoInput.addEventListener('change', (e) => {
-      if (e.target.files.length) {
+      if (e.target.files && e.target.files.length) {
         const file = e.target.files[0];
         customVideoName = file.name;
-        playerVideo.src = URL.createObjectURL(file);
-        if (isPlaying) playerVideo.play().catch(() => {});
-        setVideoSource('custom');
-        showToast(i18n[currentLang].previewCustomVideoLoaded.replace('{name}', file.name));
+        const fileUrl = URL.createObjectURL(file);
+
+        if (file.type && file.type.startsWith('image/')) {
+          currentSourceMode = 'custom_image';
+          demoImg.src = fileUrl;
+          playerVideo.pause();
+          setVideoSource('custom_image');
+          showToast(i18n[currentLang].previewCustomVideoLoaded.replace('{name}', file.name));
+        } else {
+          currentSourceMode = 'custom_video';
+          playerVideo.src = fileUrl;
+          playerVideo.muted = true;
+          playerVideo.defaultMuted = true;
+          playerVideo.load();
+          if (isPlaying) {
+            playerVideo.play().catch((err) => {
+              console.warn('Autoplay notice:', err);
+            });
+          }
+          setVideoSource('custom_video');
+          showToast(i18n[currentLang].previewCustomVideoLoaded.replace('{name}', file.name));
+        }
+      }
+    });
+
+    playerVideo.addEventListener('error', () => {
+      console.warn('Video element error:', playerVideo.error);
+      if (currentSourceMode === 'custom_video') {
+        showToast('⚠ Видео загружается или кодек не поддерживается');
       }
     });
 
@@ -1539,8 +1579,12 @@
         const W = viewCanvas.width;
         const H = viewCanvas.height;
 
-        // 1. Draw source to offscreen: video frame if ready, else poster image
-        if (playerVideo.readyState >= 2) {
+        // 1. Draw source to offscreen: image mode, or video frame if ready, else poster image
+        if (currentSourceMode === 'custom_image') {
+          if (demoImg.complete && demoImg.naturalWidth > 0) {
+            drawSourceCover(offCtx, demoImg, W, H);
+          }
+        } else if (playerVideo.readyState >= 2) {
           drawSourceCover(offCtx, playerVideo, W, H);
         } else if (demoImg.complete && demoImg.naturalWidth > 0) {
           drawSourceCover(offCtx, demoImg, W, H);
