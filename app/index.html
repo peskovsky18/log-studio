@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>LOG Studio — Генератор 3D LUT</title>
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg-color: var(--tg-theme-bg-color, #0f0f12);
+      --secondary-bg-color: var(--tg-theme-secondary-bg-color, #18181d);
+      --text-color: var(--tg-theme-text-color, #f4f4f6);
+      --hint-color: var(--tg-theme-hint-color, #8e8e93);
+      --link-color: var(--tg-theme-link-color, #007aff);
+      --button-color: var(--tg-theme-button-color, #ffffff);
+      --button-text-color: var(--tg-theme-button-text-color, #000000);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-color: #3b82f6;
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      --success-color: #34c759;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 16px 16px 36px 16px;
+      line-height: 1.45;
+      font-size: 14px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-top: 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      color: var(--hint-color);
+      font-size: 13px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--secondary-bg-color);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--hint-color);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Step 1: Reference pattern */
+    .ref-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ref-preview {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      flex-shrink: 0;
+      background: #000;
+      object-fit: cover;
+    }
+
+    .ref-text {
+      flex: 1;
+    }
+
+    .ref-text h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .ref-text p {
+      font-size: 11px;
+      color: var(--hint-color);
+      line-height: 1.3;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.15s ease;
+    }
+
+    .btn-secondary:active {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    /* Drop Zone */
+    .drop-zone {
+      border: 1.5px dashed rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      padding: 18px 12px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .drop-zone.active {
+      border-color: #60a5fa;
+      background: rgba(59, 130, 246, 0.08);
+    }
+
+    .drop-zone.loaded {
+      border-style: solid;
+      border-color: rgba(52, 199, 89, 0.4);
+      background: rgba(52, 199, 89, 0.05);
+      padding: 12px;
+    }
+
+    .drop-icon {
+      font-size: 28px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .drop-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 3px;
+    }
+
+    .drop-hint {
+      font-size: 11px;
+      color: var(--hint-color);
+    }
+
+    .loaded-info {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .loaded-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .loaded-meta {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .loaded-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .loaded-status {
+      font-size: 11px;
+      color: var(--success-color);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    /* Controls */
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #d1d1d6;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .form-label span.val {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      background: #111114;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 9px;
+      color: #ffffff;
+      padding: 10px 12px;
+      font-size: 13px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%238e8e93%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px top 50%;
+      background-size: 9px auto;
+      padding-right: 30px;
+    }
+
+    select:focus, input[type="text"]:focus {
+      border-color: #3b82f6;
+    }
+
+    .range-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+
+    /* Primary Export Button */
+    .btn-primary {
+      width: 100%;
+      background: var(--button-color);
+      color: var(--button-text-color);
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+      transition: opacity 0.15s ease, transform 0.1s ease;
+      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-primary:active {
+      opacity: 0.85;
+      transform: scale(0.985);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Modal / Alert Notification */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      background: #1c1c22;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #ffffff;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      transform: translateY(120%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000;
+    }
+
+    .notification.show {
+      transform: translateY(0);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Workflow tips */
+    .guide-box {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: var(--hint-color);
+      line-height: 1.4;
+      margin-top: 12px;
+    }
+    .guide-box ol {
+      padding-left: 16px;
+      margin-top: 4px;
+    }
+    .guide-box li {
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="badge">LOG Studio Mini App</div>
+    <h1>Создание 3D LUT (.cube)</h1>
+    <p class="subtitle">Перенос пресетов из Lightroom, Photoshop и VSCO</p>
+  </div>
+
+  <!-- STEP 1: REFERENCE HALD -->
+  <div class="card">
+    <div class="card-title">1. ЭТАЛОННЫЙ ПАТТЕРН</div>
+    <div class="ref-row">
+      <canvas id="neutralCanvas" width="512" height="512" class="ref-preview"></canvas>
+      <div class="ref-text">
+        <h3>HaldCLUT 8 (64³)</h3>
+        <p>Сохраните на телефон, примените пресет в Lightroom Mobile или Photoshop и экспортируйте.</p>
+      </div>
+    </div>
+    <button class="btn-secondary" id="btnDownloadNeutral">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      Скачать эталон (neutral_hald8.png)
+    </button>
+  </div>
+
+  <!-- STEP 2: UPLOAD EDITED HALD -->
+  <div class="card">
+    <div class="card-title">2. ЗАГРУЗКА ОБРАБОТАННОГО ПАТТЕРНА</div>
+    <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg,image/webp,image/tiff" style="display: none;">
+    
+    <div class="drop-zone" id="dropZone">
+      <div id="dropPrompt">
+        <span class="drop-icon">🖼️</span>
+        <div class="drop-title">Выберите файл из галереи</div>
+        <div class="drop-hint">Нажмите или перетащите сохраненный Hald 8</div>
+      </div>
+      <div class="loaded-info" id="loadedInfo">
+        <img id="loadedThumb" class="loaded-thumb" src="" alt="LUT Preview">
+        <div class="loaded-meta">
+          <div class="loaded-name" id="loadedFileName">preset.png</div>
+          <div class="loaded-status">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Цветовая сетка 64³ готова
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: SETTINGS & EXPORT -->
+  <div class="card">
+    <div class="card-title">3. ПАРАМЕТРЫ И ЭКСПОРТ</div>
+
+    <div class="form-group">
+      <div class="form-label">Тип вашего видео:</div>
+      <select id="selectMode">
+        <option value="creative_only">Обычное видео / Rec.709 (Creative Look)</option>
+        <option value="apple_log">Apple Log → Rec.709 (iPhone 15 / 16 Pro)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <div class="form-label">Размер сетки LUT:</div>
+      <select id="selectSize">
+        <option value="33" selected>33×33×33 (Стандарт для CapCut, VN, FCP)</option>
+        <option value="64">64×64×64 (Максимальное качество)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <div class="form-label">
+        <span>Интенсивность стиля:</span>
+        <span class="val" id="lblStrength">100%</span>
+      </div>
+      <div class="range-wrap">
+        <input type="range" id="rangeStrength" min="0" max="100" value="100">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-label">Имя LUT файла:</div>
+      <input type="text" id="txtLutName" placeholder="My_Color_Grade" value="My_Color_Grade">
+    </div>
+
+    <button class="btn-primary" id="btnExport" disabled>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      Создать и скачать .CUBE
+    </button>
+
+    <div class="guide-box">
+      <b>💡 Как использовать в мобильном монтаже:</b>
+      <ol>
+        <li>Сохраненный <code>.cube</code> файл переместите в папку «Файлы».</li>
+        <li>В <b>CapCut</b>: выберите видео &rarr; «Фильтры» &rarr; «Добавить LUT».</li>
+        <li>В <b>VN Video Editor</b>: «Фильтры» &rarr; «+» &rarr; Импорт из файлов.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="notification" id="notification">
+    <span id="notifIcon">✅</span>
+    <span id="notifText">LUT файл успешно сгенерирован!</span>
+  </div>
+
+  <!-- Offscreen Canvas for Image Extraction -->
+  <canvas id="workCanvas" width="512" height="512" class="hidden"></canvas>
+
+  <script>
+    // Initialize Telegram WebApp
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      // Apply Telegram Header Color
+      if (tg.setHeaderColor) tg.setHeaderColor('secondary_bg_color');
+    }
+
+    function hapticFeedback(type) {
+      if (tg && tg.HapticFeedback) {
+        if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
+        else if (type === 'impact') tg.HapticFeedback.impactOccurred('medium');
+      }
+    }
+
+    // --- 1. GENERATE NEUTRAL HALD 8 ---
+    const neutralCanvas = document.getElementById('neutralCanvas');
+    const nCtx = neutralCanvas.getContext('2d');
+    const LEVEL = 8;
+    const CUBE_SIZE = LEVEL * LEVEL; // 64
+    const DIM = LEVEL * CUBE_SIZE;   // 512
+
+    function renderNeutralHald(ctx) {
+      const imgData = ctx.createImageData(DIM, DIM);
+      const data = imgData.data;
+
+      for (let b = 0; b < CUBE_SIZE; b++) {
+        const y_base = b * LEVEL;
+        const b_val = Math.round(b * 255.0 / (CUBE_SIZE - 1.0));
+
+        for (let g = 0; g < CUBE_SIZE; g++) {
+          const g_val = Math.round(g * 255.0 / (CUBE_SIZE - 1.0));
+
+          for (let r = 0; r < CUBE_SIZE; r++) {
+            const r_val = Math.round(r * 255.0 / (CUBE_SIZE - 1.0));
+
+            const i = g * CUBE_SIZE + r;
+            const sub_y = Math.floor(i / DIM);
+            const sub_x = i % DIM;
+
+            const offset = ((y_base + sub_y) * DIM + sub_x) * 4;
+            data[offset] = r_val;
+            data[offset + 1] = g_val;
+            data[offset + 2] = b_val;
+            data[offset + 3] = 255;
+          }
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    renderNeutralHald(nCtx);
+
+    // Download Neutral Hald
+    document.getElementById('btnDownloadNeutral').addEventListener('click', () => {
+      hapticFeedback('impact');
+      const link = document.createElement('a');
+      link.download = 'neutral_hald8.png';
+      link.href = neutralCanvas.toDataURL('image/png');
+      link.click();
+      showNotification('✅ Эталон neutral_hald8.png сохранен!');
+    });
+
+    // --- 2. FILE UPLOAD & PARSING ---
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const dropPrompt = document.getElementById('dropPrompt');
+    const loadedInfo = document.getElementById('loadedInfo');
+    const loadedThumb = document.getElementById('loadedThumb');
+    const loadedFileName = document.getElementById('loadedFileName');
+    const btnExport = document.getElementById('btnExport');
+    const txtLutName = document.getElementById('txtLutName');
+    const workCanvas = document.getElementById('workCanvas');
+    const workCtx = workCanvas.getContext('2d', { willReadFrequently: true });
+
+    let currentLutPixels = null; // Uint8ClampedArray of 512x512 RGBA
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    ['dragenter', 'dragover'].forEach(name => {
+      dropZone.addEventListener(name, (e) => {
+        e.preventDefault();
+        dropZone.classList.add('active');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(name => {
+      dropZone.addEventListener(name, (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('active');
+      });
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length > 0) processFile(files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) processFile(e.target.files[0]);
+    });
+
+    function processFile(file) {
+      if (!file.type.startsWith('image/')) {
+        showNotification('⚠️ Пожалуйста, выберите файл изображения');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          // Draw to offscreen 512x512 canvas
+          workCtx.drawImage(img, 0, 0, DIM, DIM);
+          const imgData = workCtx.getImageData(0, 0, DIM, DIM);
+          currentLutPixels = imgData.data;
+
+          // Update UI
+          dropPrompt.style.display = 'none';
+          loadedInfo.style.display = 'flex';
+          dropZone.classList.add('loaded');
+          loadedThumb.src = e.target.result;
+          loadedFileName.textContent = file.name;
+
+          // Default LUT title
+          const cleanName = file.name.replace(/\.[^/.]+$/, "").replace("neutral_hald8", "Look").replace("hald_", "");
+          txtLutName.value = cleanName || "My_Preset";
+
+          btnExport.disabled = false;
+          hapticFeedback('success');
+          showNotification('✅ Паттерн успешно загружен!');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // --- 3. APPLE LOG COLOR SCIENCE MATH ---
+    // Constants from Apple Log Profile White Paper
+    const R_0 = -0.05641088;
+    const R_t = 0.01000000;
+    const SIGMA = 47.28711236;
+    const BETA = 0.00964052;
+    const GAMMA = 0.08550479;
+    const DELTA = 0.69336945;
+    const P_T = SIGMA * Math.pow(R_t - R_0, 2);
+
+    // BT.2020 to Rec.709 matrix with 0.45/0.55 blending for smooth skin tones
+    const M_CALIB = [
+      [ 1.36327005, -0.3232026, -0.04006745 ],
+      [ -0.06850277, 1.07309495, -0.00459217 ],
+      [ -0.00998294, -0.0553184, 1.06530133 ]
+    ];
+
+    const P_NODES = [0.0, 0.15, 0.22, 0.28, 0.35, 0.42, 0.48827, 0.55, 0.62, 0.70, 0.78, 0.86, 0.93, 1.0];
+    const Y_NODES = [0.010, 0.015, 0.032, 0.070, 0.145, 0.255, 0.395, 0.510, 0.630, 0.735, 0.825, 0.895, 0.945, 0.985];
+
+    function interpSpline(val) {
+      if (val <= P_NODES[0]) return Y_NODES[0];
+      if (val >= P_NODES[P_NODES.length - 1]) return Y_NODES[Y_NODES.length - 1];
+      for (let i = 0; i < P_NODES.length - 1; i++) {
+        if (val >= P_NODES[i] && val <= P_NODES[i + 1]) {
+          const t = (val - P_NODES[i]) / (P_NODES[i + 1] - P_NODES[i]);
+          return Y_NODES[i] + t * (Y_NODES[i + 1] - Y_NODES[i]);
+        }
+      }
+      return val;
+    }
+
+    function appleLogToLinear(p) {
+      if (p >= P_T) {
+        return Math.pow(2.0, (p - DELTA) / GAMMA) - BETA;
+      } else if (p >= 0.0) {
+        return Math.sqrt(Math.max(0.0, p / SIGMA)) + R_0;
+      } else {
+        return R_0;
+      }
+    }
+
+    function appleLogToNormalizedRec709(r_in, g_in, b_in) {
+      // 1. Decode to linear
+      const lin_r = appleLogToLinear(r_in);
+      const lin_g = appleLogToLinear(g_in);
+      const lin_b = appleLogToLinear(b_in);
+
+      // 2. BT.2020 -> Rec.709 Gamut adaptation
+      const r_709 = M_CALIB[0][0] * lin_r + M_CALIB[0][1] * lin_g + M_CALIB[0][2] * lin_b;
+      const g_709 = M_CALIB[1][0] * lin_r + M_CALIB[1][1] * lin_g + M_CALIB[1][2] * lin_b;
+      const b_709 = M_CALIB[2][0] * lin_r + M_CALIB[2][1] * lin_g + M_CALIB[2][2] * lin_b;
+
+      // 3. Filmic tone mapping
+      const p_r = interpSpline(r_in);
+      const p_g = interpSpline(g_in);
+      const p_b = interpSpline(b_in);
+
+      const y_lin = 0.2126 * lin_r + 0.7152 * lin_g + 0.0722 * lin_b;
+      const y_disp = 0.2126 * p_r + 0.7152 * p_g + 0.0722 * p_b;
+      const scale = y_disp / Math.max(1e-5, y_lin);
+
+      let out_r = Math.min(1.0, Math.max(0.0, r_709 * scale));
+      let out_g = Math.min(1.0, Math.max(0.0, g_709 * scale));
+      let out_b = Math.min(1.0, Math.max(0.0, b_709 * scale));
+
+      return [out_r, out_g, out_b];
+    }
+
+    // --- 4. TRILINEAR INTERPOLATION OF HALD-64 ---
+    function sampleHald64(r_norm, g_norm, b_norm, haldData) {
+      const cr = Math.min(63.0, Math.max(0.0, r_norm * 63.0));
+      const cg = Math.min(63.0, Math.max(0.0, g_norm * 63.0));
+      const cb = Math.min(63.0, Math.max(0.0, b_norm * 63.0));
+
+      const r0 = Math.floor(cr), r1 = Math.min(63, r0 + 1);
+      const g0 = Math.floor(cg), g1 = Math.min(63, g0 + 1);
+      const b0 = Math.floor(cb), b1 = Math.min(63, b0 + 1);
+
+      const dr = cr - r0;
+      const dg = cg - g0;
+      const db = cb - b0;
+
+      function getRGB(r, g, b) {
+        const i = g * 64 + r;
+        const sub_y = Math.floor(i / 512);
+        const sub_x = i % 512;
+        const y = b * 8 + sub_y;
+        const offset = (y * 512 + sub_x) * 4;
+        return [
+          haldData[offset] / 255.0,
+          haldData[offset + 1] / 255.0,
+          haldData[offset + 2] / 255.0
+        ];
+      }
+
+      const c000 = getRGB(r0, g0, b0);
+      const c100 = getRGB(r1, g0, b0);
+      const c010 = getRGB(r0, g1, b0);
+      const c110 = getRGB(r1, g1, b0);
+      const c001 = getRGB(r0, g0, b1);
+      const c101 = getRGB(r1, g0, b1);
+      const c011 = getRGB(r0, g1, b1);
+      const c111 = getRGB(r1, g1, b1);
+
+      const res = [0, 0, 0];
+      for (let ch = 0; ch < 3; ch++) {
+        const c00 = c000[ch] * (1 - dr) + c100[ch] * dr;
+        const c10 = c010[ch] * (1 - dr) + c110[ch] * dr;
+        const c01 = c001[ch] * (1 - dr) + c101[ch] * dr;
+        const c11 = c011[ch] * (1 - dr) + c111[ch] * dr;
+
+        const c0 = c00 * (1 - dg) + c10 * dg;
+        const c1 = c01 * (1 - dg) + c11 * dg;
+
+        res[ch] = Math.min(1.0, Math.max(0.0, c0 * (1 - db) + c1 * db));
+      }
+      return res;
+    }
+
+    // --- 5. GENERATE AND EXPORT .CUBE ---
+    const rangeStrength = document.getElementById('rangeStrength');
+    const lblStrength = document.getElementById('lblStrength');
+    const selectMode = document.getElementById('selectMode');
+    const selectSize = document.getElementById('selectSize');
+
+    rangeStrength.addEventListener('input', (e) => {
+      lblStrength.textContent = `${e.target.value}%`;
+    });
+
+    btnExport.addEventListener('click', () => {
+      if (!currentLutPixels) return;
+
+      btnExport.disabled = true;
+      btnExport.textContent = 'Обработка...';
+      hapticFeedback('impact');
+
+      setTimeout(() => {
+        try {
+          const targetSize = parseInt(selectSize.value, 10);
+          const mode = selectMode.value; // 'creative_only' or 'apple_log'
+          const strength = parseFloat(rangeStrength.value) / 100.0;
+          const title = txtLutName.value.trim() || 'LOG_Studio_LUT';
+
+          let cubeText = `# Created by LOG Studio Telegram Mini App\n`;
+          cubeText += `# Precision: ${targetSize}x${targetSize}x${targetSize}\n`;
+          cubeText += `TITLE "${title}"\n`;
+          cubeText += `LUT_3D_SIZE ${targetSize}\n`;
+          cubeText += `DOMAIN_MIN 0.0 0.0 0.0\n`;
+          cubeText += `DOMAIN_MAX 1.0 1.0 1.0\n\n`;
+
+          const lines = [];
+
+          for (let b_idx = 0; b_idx < targetSize; b_idx++) {
+            const b_in = b_idx / (targetSize - 1.0);
+
+            for (let g_idx = 0; g_idx < targetSize; g_idx++) {
+              const g_in = g_idx / (targetSize - 1.0);
+
+              for (let r_idx = 0; r_idx < targetSize; r_idx++) {
+                const r_in = r_idx / (targetSize - 1.0);
+
+                let lookup_r = r_in;
+                let lookup_g = g_in;
+                let lookup_b = b_in;
+
+                if (mode === 'apple_log') {
+                  const norm = appleLogToNormalizedRec709(r_in, g_in, b_in);
+                  lookup_r = norm[0];
+                  lookup_g = norm[1];
+                  lookup_b = norm[2];
+                }
+
+                const sampled = sampleHald64(lookup_r, lookup_g, lookup_b, currentLutPixels);
+
+                let out_r = sampled[0];
+                let out_g = sampled[1];
+                let out_b = sampled[2];
+
+                if (strength < 1.0) {
+                  const base_r = (mode === 'apple_log') ? lookup_r : r_in;
+                  const base_g = (mode === 'apple_log') ? lookup_g : g_in;
+                  const base_b = (mode === 'apple_log') ? lookup_b : b_in;
+                  out_r = (1.0 - strength) * base_r + strength * out_r;
+                  out_g = (1.0 - strength) * base_g + strength * out_g;
+                  out_b = (1.0 - strength) * base_b + strength * out_b;
+                }
+
+                lines.push(`${out_r.toFixed(6)} ${out_g.toFixed(6)} ${out_b.toFixed(6)}`);
+              }
+            }
+          }
+
+          cubeText += lines.join('\n') + '\n';
+
+          // Trigger download
+          const blob = new Blob([cubeText], { type: 'text/plain;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${title}.cube`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 2000);
+
+          hapticFeedback('success');
+          showNotification(`💾 Файл ${title}.cube сохранен!`);
+        } catch (err) {
+          console.error(err);
+          showNotification('❌ Ошибка при генерации LUT');
+        } finally {
+          btnExport.disabled = false;
+          btnExport.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Создать и скачать .CUBE
+          `;
+        }
+      }, 50);
+    });
+
+    function showNotification(msg) {
+      const el = document.getElementById('notification');
+      document.getElementById('notifText').textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3500);
+    }
+  </script>
+</body>
+</html>
